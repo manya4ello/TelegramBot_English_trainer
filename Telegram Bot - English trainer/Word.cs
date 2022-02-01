@@ -8,8 +8,15 @@ namespace Telegram_Bot___English_trainer
 {
     internal class Word
     {
-        string Russian { get; set; }    
-        string English { get; set; }    
-        string Topic { get; set; }  
+        public string Russian { get; set; }    
+        public string English { get; set; }    
+        public string Topic { get; set; }  
+
+        public Word (string rus, string eng, string topic)
+        {
+            Russian = rus;
+            English = eng;
+            Topic = topic;
+        }
     }
 }

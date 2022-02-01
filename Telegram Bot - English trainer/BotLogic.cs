@@ -8,6 +8,7 @@ namespace Telegram_Bot___English_trainer
 {
     internal class BotLogic
     {
+
         public static Task HandleErrorAsync(ITelegramBotClient botClient, Exception exception, CancellationToken cancellationToken)
         {
             var ErrorMessage = exception switch
@@ -22,8 +23,7 @@ namespace Telegram_Bot___English_trainer
 
         public static async Task UnknownUpdateHandlerAsync(ITelegramBotClient botClient, Update update)
         {
-            Console.WriteLine($"Receive message type: {update.Message.Type}");
-            Console.WriteLine($"The message was sent with id: {update.Message.MessageId}");
+            Console.WriteLine($"Неизвестное сообщение типа: {update.Message.Type} c id: {update.Message.MessageId}");
 
             await botClient.SendTextMessageAsync(update.Message.Chat.Id, "Я ничего не понял. Давайте по сценарию, как договаривались");
         }

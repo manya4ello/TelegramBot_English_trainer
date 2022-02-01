@@ -8,9 +8,11 @@ namespace Telegram_Bot___English_trainer
 {
     internal interface ICommand
     {
+        int Id { get; }
         string CommandName { get; }
         string CommandCode { get; }
+        int Father { get; }
 
-        void Execute();
+        public Task Execute();
     }
 }
