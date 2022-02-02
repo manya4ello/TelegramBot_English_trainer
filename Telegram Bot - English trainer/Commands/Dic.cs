@@ -8,11 +8,7 @@ namespace Telegram_Bot___English_trainer.Commands
 {
     internal class Dic : Command, ICommand
     {
-        public string CommandName = "Словарь";
-
-        public string CommandCode = "/dic";
-        public int Id = 1;
-        public int Father = 0;
+        
 
         public Dic()
             {

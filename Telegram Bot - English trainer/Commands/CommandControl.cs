@@ -13,14 +13,13 @@ namespace Telegram_Bot___English_trainer.Commands
         public CommandControl()
         {
             CommandsRange = new List<ICommand>();
-            CommandsRange.Add(new Dic()); 
+            Dic dic = new Dic();
+            CommandsRange.Add(new Dic());
+            Console.WriteLine($"В список команд добавлена команда: {dic.CommandName},/ {dic.CommandCode}");
             CommandsRange.Add(new AddWord());
             CommandsRange.Add(new DelWord());
             CommandsRange.Add(new Test());
             CommandsRange.Add(new Show());
-
-            ICommand test = new Show();
-            Console.WriteLine($"тестовая команда:{test.CommandName}");
 
             Console.WriteLine("Формируем список команд:");
             foreach (var command in CommandsRange)

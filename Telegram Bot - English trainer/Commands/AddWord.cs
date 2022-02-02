@@ -8,12 +8,14 @@ namespace Telegram_Bot___English_trainer.Commands
 {
     internal class AddWord : Command, ICommand
     {
-        public string CommandName ="Добавить слово";
-
-        public string CommandCode = "/add";
-        public int Id = 11;
-        public int Father = 1;
-
+        
+        public AddWord()
+        {
+            CommandName = "Добавить слово";
+            CommandCode = "/add";
+            Id = 11;
+            Father = 1;
+        }
         public Task Execute()
         {
             throw new NotImplementedException();

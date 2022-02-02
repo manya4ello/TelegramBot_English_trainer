@@ -24,17 +24,13 @@ namespace Telegram_Bot___English_trainer
             actualCommands = new Dictionary <long, ICommand>(); //сразу надо закидывать команды уровня 0
             chatStatus = ChatStatus.Status.Root;
             Commands = new Commands.CommandControl();
-            try
-            {
                 foreach (var command in Commands.CommandsRange)
                     if (command.Father == 0)
                     {
-                        Console.WriteLine($"в текущие команды добавлена команда: {command.CommandName}");
+                        Console.WriteLine($"в команды уровня {chatStatus} добавлена команда: {command.CommandName}");
                         actualCommands.Add(command.Id, command);
                     }
-            }
-            catch (Exception ex)
-            { Console.WriteLine($"в текущие команды пытались добавить команду: {ex.Message}"); }
+           
         }
 
         public long GetId() => telegramChat.Id;
@@ -63,7 +59,7 @@ namespace Telegram_Bot___English_trainer
         public bool IfCommand (string message, out ICommand command)
         {
             foreach (var commandline in actualCommands)
-                if (actualCommands[commandline.Key].CommandCode.Equals(message))
+                if (actualCommands[commandline.Key].CommandCode.Equals(message??""))
                 {
                     command = actualCommands[commandline.Key];
                     return true;

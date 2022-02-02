@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace Telegram_Bot___English_trainer.Commands
 {
-    public class Command : ICommand
+    public abstract class Command : ICommand
     {
         public string CommandName { get; set; }
 

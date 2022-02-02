@@ -35,9 +35,9 @@ namespace Telegram_Bot___English_trainer
 
         public  async Task UnknownUpdateHandlerAsync(ITelegramBotClient botClient, Update update)
         {
-            Console.WriteLine($"Неизвестное сообщение типа: {update.Message.Type} c id: {update.Message.MessageId}");
-
-            await botClient.SendTextMessageAsync(update.Message.Chat.Id, "Я ничего не понял. Давайте по сценарию, как договаривались");
+           
+           Console.WriteLine("Я ничего не понял. Давайте по сценарию, как договаривались");
+           
         }
 
         public async Task CheckIFTXTCommand (ITelegramBotClient botClient, Message message)
@@ -50,10 +50,11 @@ namespace Telegram_Bot___English_trainer
 
                 chatList.Add(chatID, newchat);
 
-                Commands.Command show = new Commands.Show();
+                Commands.Show show = new Commands.Show();
                 show.Execute(botClient, newchat);
                                
             }
+            
             ICommand curCommand;
 
             if (chatList[chatID].IfCommand(message.Text, out curCommand))
