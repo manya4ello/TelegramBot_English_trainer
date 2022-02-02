@@ -60,8 +60,8 @@ namespace Telegram_Bot___English_trainer
             if (chatList[chatID].IfCommand(message.Text, out curCommand))
             {
                 Console.WriteLine($"Принята команда {curCommand.CommandName}");
-                curCommand.Execute(botClient, chatList[chatID]);
-            }
+                await WorkWithCommand(botClient,chatID, curCommand);
+             }
         }
 
         public async Task CheckCallBackQuerry(ITelegramBotClient botClient, CallbackQuery query)
@@ -81,15 +81,13 @@ namespace Telegram_Bot___English_trainer
 
             ICommand curCommand;
 
-            if (chatList[chatID].IfCommand(query.Message.Text, out curCommand))
+            if (chatList[chatID].IfCommand(query.Data, out curCommand))
             {
-                Console.WriteLine($"Принята команда {curCommand.CommandName}");
-                curCommand.Execute(botClient, chatList[chatID]);
+                Console.WriteLine($"Нажата кнопка {query.Data}");
+                await WorkWithCommand(botClient, chatID, curCommand);
+                await botClient.AnswerCallbackQueryAsync(query.Id);
             }
-
-           // await botClient.AnswerCallbackQueryAsync(
-           //callbackQueryId: query.Id,
-           //text: $"Received {query.Data}");
+            
         }
 
         public async Task HandleUpdateAsync(ITelegramBotClient botClient, Update update, CancellationToken cancellationToken)
@@ -131,6 +129,27 @@ namespace Telegram_Bot___English_trainer
         {
             await botClient.SendTextMessageAsync(
             chatId: chat.GetId(), text: text, replyMarkup: keyboard);
+        }
+
+        private async Task WorkWithCommand (ITelegramBotClient botClient, long chatid,ICommand command)
+        {
+            Console.WriteLine($"Выполняется команда {command.CommandName}");
+
+            var chat = chatList[chatid];
+            switch (command)
+              {
+                case (Commands.Dic):
+                    {
+                        chat.actualCommands.Clear();
+                        chat.actualCommands = chat.Commands.GetChildren(command.Id);
+                        break;
+                    }
+
+            }
+            
+
+            command.Execute(botClient, chat);
+
         }
 
     }

@@ -13,7 +13,7 @@ namespace Telegram_Bot___English_trainer
         public List<Message> telegramMessages;
 
         public Dictionary<long, ICommand> actualCommands;
-        private Commands.CommandControl Commands; //надо ли?
+        public Commands.CommandControl Commands; //надо ли?
 
         ChatStatus.Status chatStatus;
 

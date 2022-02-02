@@ -18,9 +18,13 @@ namespace Telegram_Bot___English_trainer.Commands
             Father = 0;
             Console.WriteLine($"Создана команда {CommandName}");
         }
-        public Task Execute()
+        public new async Task Execute(ITelegramBotClient botClient, Conversation conversation)
         {
-            throw new NotImplementedException();
+            await botClient.SendTextMessageAsync(
+            chatId: conversation.GetId(), text: "Добро пожаловать в словарь");
+
+            Show show = new Show();
+            show.Execute(botClient, conversation);  
         }
     }
 }
