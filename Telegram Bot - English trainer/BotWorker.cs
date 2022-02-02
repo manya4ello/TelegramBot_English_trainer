@@ -7,20 +7,21 @@ namespace Telegram_Bot___English_trainer
     {
         static ITelegramBotClient botClient;
         static CancellationTokenSource cts;
+        static BotLogic botLogic;
         public void Initialize()
         {
             botClient = new TelegramBotClient(BotCredentials.BotToken);
-            
+            botLogic = new BotLogic(botClient);
         }
 
         public async void Work()
         {
             
-
+            
             using var cts = new CancellationTokenSource();
             ReceiverOptions receiverOptions = new() { AllowedUpdates = { } };
-            botClient.StartReceiving(BotLogic.HandleUpdateAsync,
-                               BotLogic.HandleErrorAsync,
+            botClient.StartReceiving(botLogic.HandleUpdateAsync,
+                               botLogic.HandleErrorAsync,
                                receiverOptions,
                                cts.Token);
 

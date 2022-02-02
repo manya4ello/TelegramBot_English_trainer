@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace Telegram_Bot___English_trainer.Commands
 {
-    internal abstract class Command : ICommand
+    public abstract class Command : ICommand
     {
         public string CommandName => throw new NotImplementedException();
 
