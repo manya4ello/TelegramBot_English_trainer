@@ -15,8 +15,8 @@ namespace Telegram_Bot___English_trainer.Commands
         public Show()
         {
             CommandName = "Показать команды";
-            CommandCode = "/show";
-            Id = 3;
+            CommandCode = "/Показать возможные команды";
+            Id = 2;
             Father = 0;
 
             Console.WriteLine($"Создана команда {CommandName}");

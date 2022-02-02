@@ -14,8 +14,8 @@ namespace Telegram_Bot___English_trainer.Commands
             {
             CommandName = "Словарь";
             CommandCode = "/dic";
-            Id = 1;
-            Father = 0;
+            Id = 10;
+            Father = 1;
             Console.WriteLine($"Создана команда {CommandName}");
         }
         public new async Task Execute(ITelegramBotClient botClient, Conversation conversation)

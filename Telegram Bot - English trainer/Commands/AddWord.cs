@@ -14,7 +14,7 @@ namespace Telegram_Bot___English_trainer.Commands
             CommandName = "Добавить слово";
             CommandCode = "/add";
             Id = 11;
-            Father = 1;
+            Father = 10;
         }
         public Task Execute()
         {

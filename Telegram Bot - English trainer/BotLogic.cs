@@ -50,18 +50,34 @@ namespace Telegram_Bot___English_trainer
 
                 chatList.Add(chatID, newchat);
 
-                Commands.Show show = new Commands.Show();
-                show.Execute(botClient, newchat);
-                               
+                ICommand show = new Commands.Show();
+                ICommand root = new Commands.Root();
+                ICommand about = new Commands.About();
+                ReplyKeyboardMarkup replyKeyboardMarkup = new(new[]
+                 {
+                     new KeyboardButton[] { about.CommandCode, root.CommandCode, show.CommandCode },
+                 })
+                {
+                    ResizeKeyboard = true
+                };
+
+                Message sentMessage = await botClient.SendTextMessageAsync(
+                    chatId: chatID,
+                    text: "Выберите нужную опцию из меню",
+                    replyMarkup: replyKeyboardMarkup
+                     );
+
             }
             
             ICommand curCommand;
+            
 
             if (chatList[chatID].IfCommand(message.Text, out curCommand))
             {
                 Console.WriteLine($"Принята команда {curCommand.CommandName}");
                 await WorkWithCommand(botClient,chatID, curCommand);
              }
+            
         }
 
         public async Task CheckCallBackQuerry(ITelegramBotClient botClient, CallbackQuery query)
@@ -80,6 +96,7 @@ namespace Telegram_Bot___English_trainer
             }
 
             ICommand curCommand;
+           
 
             if (chatList[chatID].IfCommand(query.Data, out curCommand))
             {
@@ -144,7 +161,18 @@ namespace Telegram_Bot___English_trainer
                         chat.actualCommands = chat.Commands.GetChildren(command.Id);
                         break;
                     }
-
+                case (Commands.Test):
+                    {
+                        chat.actualCommands.Clear();
+                        chat.actualCommands = chat.Commands.GetChildren(command.Id);
+                        break;
+                    }
+                case (Commands.Root):
+                    {
+                        chat.actualCommands.Clear();
+                        chat.actualCommands = chat.Commands.GetChildren(1);
+                        break;
+                    }
             }
             
 

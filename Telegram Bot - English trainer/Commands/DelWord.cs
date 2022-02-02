@@ -13,10 +13,10 @@ namespace Telegram_Bot___English_trainer.Commands
 
         public DelWord()
         {
-            CommandName = "Удалть слово";
+            CommandName = "Удалить слово";
             CommandCode = "/del";
             Id = 12;
-            Father = 1;
+            Father = 10;
 
     }
             public Task Execute()

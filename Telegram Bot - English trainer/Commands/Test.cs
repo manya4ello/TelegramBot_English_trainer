@@ -13,8 +13,8 @@ namespace Telegram_Bot___English_trainer.Commands
         {
             CommandName = "Тест";
             CommandCode = "/test";
-            Id = 2;
-            Father = 0;
+            Id = 20;
+            Father = 1;
         }
         public Task Execute(Chat chat)
         {
