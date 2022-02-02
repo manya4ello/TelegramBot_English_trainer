@@ -10,8 +10,12 @@ namespace Telegram_Bot___English_trainer
     {
         public string Russian { get; set; }    
         public string English { get; set; }    
-        public string Topic { get; set; }  
+        public string Topic { get; set; }
 
+        public Word()
+        {
+            
+        }
         public Word (string rus, string eng, string topic)
         {
             Russian = rus;

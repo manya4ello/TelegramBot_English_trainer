@@ -18,7 +18,7 @@ namespace Telegram_Bot___English_trainer.Commands
             CommandsRange.Add(new AddWord());
             CommandsRange.Add(new DelWord());
             CommandsRange.Add(new Test());
-           // CommandsRange.Add(new Show());
+           CommandsRange.Add(new ShowDic());
             CommandsRange.Add(new About());
 
             Console.WriteLine("Формируем список команд:");

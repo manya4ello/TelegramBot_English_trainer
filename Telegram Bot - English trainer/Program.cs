@@ -6,6 +6,7 @@ global using Telegram.Bot.Extensions.Polling;
 global using Telegram.Bot.Types;
 global using Telegram.Bot.Types.Enums;
 global using Telegram.Bot.Types.ReplyMarkups;
+global using System.IO;
 
 
 namespace Telegram_Bot___English_trainer
@@ -21,7 +22,10 @@ namespace Telegram_Bot___English_trainer
             bot.Initialize();
             bot.Work();
 
-           
+           //Dictionary dic = new Dictionary();
+           // dic.ReadFile();
+
+
             Console.ReadLine();
        
         }

@@ -12,12 +12,15 @@ namespace Telegram_Bot___English_trainer
         private ITelegramBotClient botClient;
        
         private Dictionary<long, Conversation> chatList;
+        public static Dictionary dictionary;
 
         public BotLogic(ITelegramBotClient botClientRes)
         {
            
-            chatList = new Dictionary<long,
-            Conversation>();
+            chatList = new Dictionary<long,Conversation>();
+            dictionary = new Dictionary();
+            dictionary.ReadFile();
+            
             botClient = botClientRes;
         }
 
@@ -134,19 +137,7 @@ namespace Telegram_Bot___English_trainer
                 await HandleErrorAsync(botClient, exception, cancellationToken);
             }
         }
-        private async Task SendTextMessage(ITelegramBotClient botClient, Conversation chat)
-        {
-            var text = "messenger.CreateTextMessage(chat)";
-
-            await botClient.SendTextMessageAsync(
-            chatId: chat.GetId(), text: text);
-        }
-
-        private async Task SendKeyBoard(ITelegramBotClient botClient, Conversation chat, string text, InlineKeyboardMarkup keyboard)
-        {
-            await botClient.SendTextMessageAsync(
-            chatId: chat.GetId(), text: text, replyMarkup: keyboard);
-        }
+                
 
         private async Task WorkWithCommand (ITelegramBotClient botClient, long chatid,ICommand command)
         {

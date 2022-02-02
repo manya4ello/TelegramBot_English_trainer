@@ -19,5 +19,6 @@ namespace Telegram_Bot___English_trainer
                 await botClient.SendTextMessageAsync(ChatId, $"{word.Russian}\t{word.English}\t{word.Topic}");
             }
         }
+
     }
 }
