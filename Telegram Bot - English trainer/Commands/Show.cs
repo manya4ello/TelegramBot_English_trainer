@@ -39,8 +39,7 @@ namespace Telegram_Bot___English_trainer.Commands
                       );
             }
 
-
-
+           
             var keyboard = new InlineKeyboardMarkup(buttonList);
 
             await botClient.SendTextMessageAsync(

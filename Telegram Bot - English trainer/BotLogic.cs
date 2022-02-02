@@ -63,6 +63,35 @@ namespace Telegram_Bot___English_trainer
                 curCommand.Execute(botClient, chatList[chatID]);
             }
         }
+
+        public async Task CheckCallBackQuerry(ITelegramBotClient botClient, CallbackQuery query)
+        {
+            var chatID = query.Message.Chat.Id;
+
+            if (!chatList.ContainsKey(chatID))
+            {
+                var newchat = new Conversation(query.Message.Chat);
+
+                chatList.Add(chatID, newchat);
+
+                Commands.Show show = new Commands.Show();
+                show.Execute(botClient, newchat);
+
+            }
+
+            ICommand curCommand;
+
+            if (chatList[chatID].IfCommand(query.Message.Text, out curCommand))
+            {
+                Console.WriteLine($"Принята команда {curCommand.CommandName}");
+                curCommand.Execute(botClient, chatList[chatID]);
+            }
+
+           // await botClient.AnswerCallbackQueryAsync(
+           //callbackQueryId: query.Id,
+           //text: $"Received {query.Data}");
+        }
+
         public async Task HandleUpdateAsync(ITelegramBotClient botClient, Update update, CancellationToken cancellationToken)
         {
             var handler = update.Type switch
@@ -73,9 +102,9 @@ namespace Telegram_Bot___English_trainer
                 // UpdateType.ShippingQuery:
                 // UpdateType.PreCheckoutQuery:
                 // UpdateType.Poll:
-                UpdateType.Message => CheckIFTXTCommand (botClient, update.Message!),
-                UpdateType.EditedMessage => CheckIFTXTCommand (botClient, update.EditedMessage!),
-                //UpdateType.CallbackQuery => BotOnCallbackQueryReceived(botClient, update.CallbackQuery!),
+                UpdateType.Message => CheckIFTXTCommand (botClient, update.Message),
+                UpdateType.EditedMessage => CheckIFTXTCommand (botClient, update.EditedMessage),
+                UpdateType.CallbackQuery => CheckCallBackQuerry(botClient, update.CallbackQuery),
                 //UpdateType.InlineQuery => BotOnInlineQueryReceived(botClient, update.InlineQuery!),
                 //UpdateType.ChosenInlineResult => BotOnChosenInlineResultReceived(botClient, update.ChosenInlineResult!),
                 _ => UnknownUpdateHandlerAsync(botClient, update)
