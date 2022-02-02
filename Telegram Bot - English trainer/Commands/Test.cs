@@ -6,15 +6,15 @@ using System.Threading.Tasks;
 
 namespace Telegram_Bot___English_trainer.Commands
 {
-    internal class AddWord : Command, ICommand
+    internal class Test : Command, ICommand
     {
-        public string CommandName ="Добавить слово";
+        public string CommandName = "Тест";
 
-        public string CommandCode = "/add";
-        public int Id = 11;
-        public int Father = 1;
+        public string CommandCode = "/test";
+        public int Id = 2;
+        public int Father = 0;
 
-        public Task Execute()
+        public Task Execute(Chat chat)
         {
             throw new NotImplementedException();
         }

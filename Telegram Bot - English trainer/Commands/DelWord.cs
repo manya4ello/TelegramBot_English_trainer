@@ -8,13 +8,17 @@ namespace Telegram_Bot___English_trainer.Commands
 {
     internal class DelWord : Command, ICommand
     {
-        public string CommandName => throw new NotImplementedException();
+        
+            public string CommandName = "Удалть слово";
 
-        public string CommandCode => throw new NotImplementedException();
+            public string CommandCode = "/del";
+            public int Id = 12;
+            public int Father = 1;
 
-        public Task Execute()
-        {
-            throw new NotImplementedException();
-        }
+            public Task Execute()
+            {
+                throw new NotImplementedException();
+            }
+        
     }
 }

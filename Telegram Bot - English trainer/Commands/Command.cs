@@ -6,17 +6,17 @@ using System.Threading.Tasks;
 
 namespace Telegram_Bot___English_trainer.Commands
 {
-    public abstract class Command : ICommand
+    public class Command : ICommand
     {
-        public string CommandName => throw new NotImplementedException();
+        public string CommandName { get; set; }
 
-        public string CommandCode => throw new NotImplementedException();
+        public string CommandCode { get; set; }
 
-        public int Id => throw new NotImplementedException();
+        public int Id { get; set; }
 
-        public int Father => throw new NotImplementedException();
+        public int Father { get; set; }
 
-        public Task Execute()
+        public Task Execute(ITelegramBotClient botClient, Conversation conversation)
         {
             throw new NotImplementedException();
         }

@@ -20,6 +20,13 @@ namespace Telegram_Bot___English_trainer
 
             bot.Initialize();
             bot.Work();
+
+            Conversation test = new Conversation(new Chat());
+
+
+
+
+
             Console.ReadLine();
        
         }

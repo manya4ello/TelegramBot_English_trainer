@@ -49,11 +49,18 @@ namespace Telegram_Bot___English_trainer
                 var newchat = new Conversation(message.Chat);
 
                 chatList.Add(chatID, newchat);
+
+                Commands.Command show = new Commands.Show();
+                show.Execute(botClient, newchat);
                                
             }
+            ICommand curCommand;
 
-            
-
+            if (chatList[chatID].IfCommand(message.Text, out curCommand))
+            {
+                Console.WriteLine($"Принята команда {curCommand.CommandName}");
+                curCommand.Execute(botClient, chatList[chatID]);
+            }
         }
         public async Task HandleUpdateAsync(ITelegramBotClient botClient, Update update, CancellationToken cancellationToken)
         {

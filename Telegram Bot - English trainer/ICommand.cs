@@ -6,13 +6,13 @@ using System.Threading.Tasks;
 
 namespace Telegram_Bot___English_trainer
 {
-    internal interface ICommand
+    public interface ICommand
     {
         int Id { get; }
         string CommandName { get; }
         string CommandCode { get; }
         int Father { get; }
 
-        public Task Execute();
+        public Task Execute(ITelegramBotClient botClient, Conversation conversation);
     }
 }

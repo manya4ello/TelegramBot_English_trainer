@@ -12,7 +12,8 @@ namespace Telegram_Bot___English_trainer
 
         public List<Message> telegramMessages;
 
-        public Dictionary<long, Commands.Command> actualCommands;
+        public Dictionary<long, ICommand> actualCommands;
+        private Commands.CommandControl Commands; //надо ли?
 
         ChatStatus.Status chatStatus;
 
@@ -20,8 +21,20 @@ namespace Telegram_Bot___English_trainer
         {
             telegramChat = chat;
             telegramMessages = new List<Message>();
-            actualCommands = new Dictionary <long,Commands.Command>(); //сразу надо закидывать команды уровня 0
+            actualCommands = new Dictionary <long, ICommand>(); //сразу надо закидывать команды уровня 0
             chatStatus = ChatStatus.Status.Root;
+            Commands = new Commands.CommandControl();
+            try
+            {
+                foreach (var command in Commands.CommandsRange)
+                    if (command.Father == 0)
+                    {
+                        Console.WriteLine($"в текущие команды добавлена команда: {command.CommandName}");
+                        actualCommands.Add(command.Id, command);
+                    }
+            }
+            catch (Exception ex)
+            { Console.WriteLine($"в текущие команды пытались добавить команду: {ex.Message}"); }
         }
 
         public long GetId() => telegramChat.Id;
@@ -47,10 +60,45 @@ namespace Telegram_Bot___English_trainer
 
         public string GetLastMessage() => telegramMessages[^1].Text;
 
-        public bool IfCommand (string message)
+        public bool IfCommand (string message, out ICommand command)
         {
-            foreach (var command in actualCommands)
-                if command.
+            foreach (var commandline in actualCommands)
+                if (actualCommands[commandline.Key].CommandCode.Equals(message))
+                {
+                    command = actualCommands[commandline.Key];
+                    return true;
+                }
+            command = null;
+            return false;
+        }
+
+        private async Task ShowCommands(ITelegramBotClient botClient, Conversation chat)
+        {
+            string text = "Доступные команды:";
+            var buttonList = new List<InlineKeyboardButton>();
+
+            ICommand command;
+            foreach (var commandline in actualCommands)
+            {
+                command = commandline.Value;
+                
+                buttonList.Add(new InlineKeyboardButton (command.CommandName)
+                    {
+                        Text = command.CommandName,
+                        CallbackData = command.CommandCode
+                    }
+                      );
+            }
+
+                        
+
+                var keyboard = new InlineKeyboardMarkup(buttonList);
+
+               
+            
+
+            await botClient.SendTextMessageAsync(
+            chatId: chat.GetId(), text: text, replyMarkup: keyboard);
         }
 
     }
