@@ -10,21 +10,21 @@ namespace Telegram_Bot___English_trainer
     internal class BotLogic
     {
         private ITelegramBotClient botClient;
-       
+
         private Dictionary<long, Conversation> chatList;
         public static Dictionary dictionary;
 
         public BotLogic(ITelegramBotClient botClientRes)
         {
-           
-            chatList = new Dictionary<long,Conversation>();
+
+            chatList = new Dictionary<long, Conversation>();
             dictionary = new Dictionary();
             dictionary.ReadFile();
-            
+
             botClient = botClientRes;
         }
 
-        public  Task HandleErrorAsync(ITelegramBotClient botClient, Exception exception, CancellationToken cancellationToken)
+        public Task HandleErrorAsync(ITelegramBotClient botClient, Exception exception, CancellationToken cancellationToken)
         {
             var ErrorMessage = exception switch
             {
@@ -36,14 +36,14 @@ namespace Telegram_Bot___English_trainer
             return Task.CompletedTask;
         }
 
-        public  async Task UnknownUpdateHandlerAsync(ITelegramBotClient botClient, Update update)
+        public async Task UnknownUpdateHandlerAsync(ITelegramBotClient botClient, Update update)
         {
-           
-           Console.WriteLine("Я ничего не понял. Давайте по сценарию, как договаривались");
-           
+
+            Console.WriteLine("Я ничего не понял. Давайте по сценарию, как договаривались");
+
         }
 
-        public async Task CheckIFTXTCommand (ITelegramBotClient botClient, Message message)
+        public async Task CheckIFTXTCommand(ITelegramBotClient botClient, Message message)
         {
             var chatID = message.Chat.Id;
 
@@ -71,16 +71,16 @@ namespace Telegram_Bot___English_trainer
                      );
 
             }
-            
+
             ICommand curCommand;
-            
+
 
             if (chatList[chatID].IfCommand(message.Text, out curCommand))
             {
                 Console.WriteLine($"Принята команда {curCommand.CommandName}");
-                await WorkWithCommand(botClient,chatID, curCommand);
-             }
-            
+                await WorkWithCommand(botClient, chatID, curCommand);
+            }
+
         }
 
         public async Task CheckCallBackQuerry(ITelegramBotClient botClient, CallbackQuery query)
@@ -99,7 +99,7 @@ namespace Telegram_Bot___English_trainer
             }
 
             ICommand curCommand;
-           
+
 
             if (chatList[chatID].IfCommand(query.Data, out curCommand))
             {
@@ -107,7 +107,7 @@ namespace Telegram_Bot___English_trainer
                 await WorkWithCommand(botClient, chatID, curCommand);
                 await botClient.AnswerCallbackQueryAsync(query.Id);
             }
-            
+
         }
 
         public async Task HandleUpdateAsync(ITelegramBotClient botClient, Update update, CancellationToken cancellationToken)
@@ -120,8 +120,8 @@ namespace Telegram_Bot___English_trainer
                 // UpdateType.ShippingQuery:
                 // UpdateType.PreCheckoutQuery:
                 // UpdateType.Poll:
-                UpdateType.Message => CheckIFTXTCommand (botClient, update.Message),
-                UpdateType.EditedMessage => CheckIFTXTCommand (botClient, update.EditedMessage),
+                UpdateType.Message => CheckIFTXTCommand(botClient, update.Message),
+                UpdateType.EditedMessage => CheckIFTXTCommand(botClient, update.EditedMessage),
                 UpdateType.CallbackQuery => CheckCallBackQuerry(botClient, update.CallbackQuery),
                 //UpdateType.InlineQuery => BotOnInlineQueryReceived(botClient, update.InlineQuery!),
                 //UpdateType.ChosenInlineResult => BotOnChosenInlineResultReceived(botClient, update.ChosenInlineResult!),
@@ -137,15 +137,15 @@ namespace Telegram_Bot___English_trainer
                 await HandleErrorAsync(botClient, exception, cancellationToken);
             }
         }
-                
 
-        private async Task WorkWithCommand (ITelegramBotClient botClient, long chatid,ICommand command)
+
+        private async Task WorkWithCommand(ITelegramBotClient botClient, long chatid, ICommand command)
         {
             Console.WriteLine($"Выполняется команда {command.CommandName}");
 
             var chat = chatList[chatid];
             switch (command)
-              {
+            {
                 case (Commands.Dic):
                     {
                         chat.actualCommands.Clear();
@@ -165,7 +165,7 @@ namespace Telegram_Bot___English_trainer
                         break;
                     }
             }
-            
+
 
             command.Execute(botClient, chat);
 
