@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace Telegram_Bot___English_trainer
 {
-    internal class Word
+    public class Word
     {
         public string Russian { get; set; }    
         public string English { get; set; }    

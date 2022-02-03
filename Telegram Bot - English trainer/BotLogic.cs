@@ -13,8 +13,7 @@ namespace Telegram_Bot___English_trainer
 
         private Dictionary<long, Conversation> chatList;
         public static Dictionary dictionary;
-        public static Word wordtoadd;
-        
+                
 
         public BotLogic(ITelegramBotClient botClientRes)
         {
@@ -23,8 +22,7 @@ namespace Telegram_Bot___English_trainer
             dictionary = new Dictionary();
             dictionary.ReadFile();
             botClient = botClientRes;
-            wordtoadd = new Word();
-           
+                       
         }
 
         
@@ -75,7 +73,7 @@ namespace Telegram_Bot___English_trainer
                 || chatstatus == ChatStatus.Status.AddedTopic)
             {
                 Console.WriteLine("Чего-то добавляем");
-                await WorkWithCommand(botClient, chatID, new Commands.AddWord());
+                await AddWordLogic(botClient, chatID);
             }
 
 
@@ -193,5 +191,90 @@ namespace Telegram_Bot___English_trainer
 
         }
 
+        private async Task AddWordLogic(ITelegramBotClient botClient, long chatid)
+        {
+            string mes = chatList[chatid].GetLastMessage();
+            var chatstatus = chatList[chatid].chatStatus;
+            var wordtoad = chatList[chatid].wordtoadd;
+
+            Console.WriteLine($"AddWordLogic: последняя команда:{ mes}, статус: {chatstatus}");
+
+            switch (chatstatus)
+            {
+                
+                case ChatStatus.Status.AddWord:
+                    {
+                        chatList[chatid].wordtoadd.Russian = mes;
+                        await botClient.SendTextMessageAsync(chatId: chatid, text: "Введите значение на английском:");
+                        chatstatus = ChatStatus.Status.AddedRus;
+                        break;
+                    }
+                case ChatStatus.Status.AddedRus:
+                    {
+                        chatList[chatid].wordtoadd.English = mes;
+                        await botClient.SendTextMessageAsync(chatId: chatid, text: "Введите тему:");
+                        chatstatus = ChatStatus.Status.AddedEng;
+                        break;
+                    }
+                case ChatStatus.Status.AddedEng:
+                    {
+                        chatList[chatid].wordtoadd.Topic = mes;
+                        string text = $"Проверьте правильность:" +
+                            $"\n*Рус:*\t{chatList[chatid].wordtoadd.Russian}\t*Анг:*\t{chatList[chatid].wordtoadd.English}\t*Тема:*\t({chatList[chatid].wordtoadd.Topic})" +
+                            $"\n Добавляем в словарь?";
+                        await botClient.SendTextMessageAsync(chatId: chatid, text: text, parseMode: ParseMode.Markdown);
+
+                        chatstatus = ChatStatus.Status.AddedTopic;
+                        ICommand confirm = new Commands.WordConfirm();
+                        confirm.Execute(botClient, chatList[chatid]);
+                        break;
+                    }
+                case ChatStatus.Status.AddedTopic:
+                    {
+                        if (mes == Commands.WordConfirm.Yes)
+                        {
+                            bool dubl = false;
+                            foreach (Word word in Dictionary.Vocabulary)
+                            {
+                                if (word.Russian == chatList[chatid].wordtoadd.Russian)
+                                {
+                                    dubl = true;
+                                    await botClient.SendTextMessageAsync(chatId: chatid, text: "К сожалению, данное слово уже есть в словаре");
+                                }
+                            }
+
+                            if (!dubl)
+                            {
+                                Dictionary.Vocabulary.Add(chatList[chatid].wordtoadd);
+                                await botClient.SendTextMessageAsync(chatId: chatid, text: "Слово успешно добавлено");
+                            }
+                        }
+
+                        if (mes == Commands.WordConfirm.No)
+                        {
+                            await botClient.SendTextMessageAsync(chatId: chatid, text: "Слово не добавлено");
+                        }
+
+                        chatList[chatid].wordtoadd = new Word();
+                        chatstatus = ChatStatus.Status.Dic;
+
+                        ICommand mainmenu = new Commands.Mainmenu();
+                        mainmenu.Execute(botClient, chatList[chatid]);
+
+                        ICommand show = new Commands.Show();
+                        show.Execute(botClient, chatList[chatid]);
+                        break;
+                    }
+                default:
+                    {
+                        await botClient.SendTextMessageAsync(chatId: chatid, text: "А хз, что произошло");
+                        chatstatus = ChatStatus.Status.Root;
+                        break;
+                    }
+            }
+
+            Console.WriteLine($"AddWordLogic: На выходе {chatstatus}");
+            chatList[chatid].chatStatus = chatstatus;
+        }
     }
 }

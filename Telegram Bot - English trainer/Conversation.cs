@@ -17,6 +17,7 @@ namespace Telegram_Bot___English_trainer
 
         public ChatStatus.Status chatStatus;
 
+        public Word wordtoadd;
         public Conversation(Chat chat)
         {
             telegramChat = chat;
@@ -31,6 +32,7 @@ namespace Telegram_Bot___English_trainer
                         actualCommands.Add(command.Id, command);
                     }
             chatStatus = ChatStatus.Status.Root;
+            wordtoadd = new Word();
         }
 
         public long GetId() => telegramChat.Id;
