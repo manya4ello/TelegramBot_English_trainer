@@ -20,14 +20,16 @@ namespace Telegram_Bot___English_trainer.Commands
             Father = 0;
                         
         }
-        public new async  Task Execute(ITelegramBotClient botClient, Conversation conversation)
+        public new async  Task<ChatStatus.Status> Execute(ITelegramBotClient botClient, Conversation conversation)
         {
             string text = "*ГЛАВНОЕ МЕНЮ*";
                         
             await botClient.SendTextMessageAsync(
             chatId: conversation.GetId(), text: text, parseMode: ParseMode.Markdown);
-                   
 
+            ICommand mm = new Mainmenu();
+            await mm.Execute(botClient, conversation);
+            return ChatStatus.Status.Root;
         }
     }
 }

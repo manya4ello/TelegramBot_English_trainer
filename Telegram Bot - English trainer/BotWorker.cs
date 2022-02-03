@@ -20,6 +20,8 @@ namespace Telegram_Bot___English_trainer
             
             using var cts = new CancellationTokenSource();
             ReceiverOptions receiverOptions = new() { AllowedUpdates = { } };
+
+
             botClient.StartReceiving(botLogic.HandleUpdateAsync,
                                botLogic.HandleErrorAsync,
                                receiverOptions,

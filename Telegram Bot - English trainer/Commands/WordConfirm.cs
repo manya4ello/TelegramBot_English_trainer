@@ -20,7 +20,7 @@ namespace Telegram_Bot___English_trainer.Commands
             
         }
 
-        public new async Task Execute(ITelegramBotClient botClient, Conversation conversation)
+        public new async Task<ChatStatus.Status> Execute(ITelegramBotClient botClient, Conversation conversation)
         {
             ReplyKeyboardMarkup replyKeyboardMarkup = new(new[]
             {
@@ -36,6 +36,7 @@ namespace Telegram_Bot___English_trainer.Commands
                 replyMarkup: replyKeyboardMarkup
                 );
 
+            return ChatStatus.Status.Dic;
         }
 
 

@@ -15,7 +15,7 @@ namespace Telegram_Bot___English_trainer
         public Dictionary<long, ICommand> actualCommands;
         public Commands.CommandControl Commands; //надо ли?
 
-        ChatStatus.Status chatStatus;
+        public ChatStatus.Status chatStatus;
 
         public Conversation(Chat chat)
         {
@@ -30,10 +30,11 @@ namespace Telegram_Bot___English_trainer
                         Console.WriteLine($"в команды уровня {chatStatus} добавлена команда: {command.CommandName}");
                         actualCommands.Add(command.Id, command);
                     }
-           
+            chatStatus = ChatStatus.Status.Root;
         }
 
         public long GetId() => telegramChat.Id;
+               
         public void AddMessage(Message message)
         {
             telegramMessages.Add(message);

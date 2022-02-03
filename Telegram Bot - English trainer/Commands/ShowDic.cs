@@ -18,12 +18,12 @@ namespace Telegram_Bot___English_trainer.Commands
             Father = 10;
             
         }
-        public new async Task Execute(ITelegramBotClient botClient, Conversation conversation)
+        public new async Task<ChatStatus.Status> Execute(ITelegramBotClient botClient, Conversation conversation)
         {
             
             Dictionary.ShowAll(botClient, conversation.GetId());
-                        
 
+            return ChatStatus.Status.Dic;  
         }
     }
 }

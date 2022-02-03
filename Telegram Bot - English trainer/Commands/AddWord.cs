@@ -16,33 +16,36 @@ namespace Telegram_Bot___English_trainer.Commands
             Id = 11;
             Father = 10;
         }
-        
-        public new async Task Execute(ITelegramBotClient botClient, Conversation conversation)
+
+       
+        public new async Task<ChatStatus.Status> Execute(ITelegramBotClient botClient, Conversation conversation)
         {
             string mes = conversation.GetLastMessage();
+            var chatstatus = conversation.chatStatus;
+
+
+            Console.WriteLine($"последняя команда:{ mes}, статус: {conversation.chatStatus}");
             
-            Console.WriteLine($"последняя команда:{ mes}, статус: {BotLogic.chatstatus}");
-            
-            switch (BotLogic.chatstatus)
+            switch (chatstatus)
             {
                 case ChatStatus.Status.Dic:
                     {
                         await botClient.SendTextMessageAsync(chatId: conversation.GetId(), text: "Введите значение на русском:");
-                        BotLogic.chatstatus = ChatStatus.Status.AddWord;
+                        chatstatus = ChatStatus.Status.AddWord;
                         break;
                     }
                 case ChatStatus.Status.AddWord:
                 {
                         BotLogic.wordtoadd.Russian = mes;
                         await botClient.SendTextMessageAsync(chatId: conversation.GetId(), text: "Введите значение на английском:");
-                        BotLogic.chatstatus = ChatStatus.Status.AddedRus;
+                        chatstatus = ChatStatus.Status.AddedRus;
                         break;
                 }
                 case ChatStatus.Status.AddedRus:
                  {
                         BotLogic.wordtoadd.English = mes;
                         await botClient.SendTextMessageAsync(chatId: conversation.GetId(), text: "Введите тему:");
-                        BotLogic.chatstatus = ChatStatus.Status.AddedEng;
+                        chatstatus = ChatStatus.Status.AddedEng;
                         break;
                  }
                 case ChatStatus.Status.AddedEng:
@@ -52,8 +55,8 @@ namespace Telegram_Bot___English_trainer.Commands
                             $"\n*Рус:*\t{BotLogic.wordtoadd.Russian}\t*Анг:*\t{BotLogic.wordtoadd.English}\t*Тема:*\t({BotLogic.wordtoadd.Topic})" +
                             $"\n Добавляем в словарь?";
                         await botClient.SendTextMessageAsync(chatId: conversation.GetId(), text: text, parseMode: ParseMode.Markdown);
-                        
-                        BotLogic.chatstatus = ChatStatus.Status.AddedTopic;
+
+                        chatstatus = ChatStatus.Status.AddedTopic;
                         ICommand confirm = new WordConfirm();
                         confirm.Execute(botClient, conversation);
                         break;
@@ -85,9 +88,11 @@ namespace Telegram_Bot___English_trainer.Commands
                         }
 
                         BotLogic.wordtoadd = new Word();
-                        BotLogic.chatstatus = ChatStatus.Status.Dic;
+                        chatstatus = ChatStatus.Status.Dic;
+
                         ICommand mainmenu = new Commands.Mainmenu();
                         mainmenu.Execute(botClient, conversation);
+
                         ICommand show = new Commands.Show();
                         show.Execute(botClient, conversation);
                         break;
@@ -95,12 +100,13 @@ namespace Telegram_Bot___English_trainer.Commands
                 default:
                     {
                         await botClient.SendTextMessageAsync(chatId: conversation.GetId(), text: "А хз, что произошло");
-                        BotLogic.chatstatus = ChatStatus.Status.Root;
+                        conversation.chatStatus = ChatStatus.Status.Root;
                         break;
                     }
             }
            
-            Console.WriteLine($"На выходе {BotLogic.chatstatus}");
+            Console.WriteLine($"На выходе {conversation.chatStatus}");
+            return chatstatus;
         }
     }
 }

@@ -20,7 +20,7 @@ namespace Telegram_Bot___English_trainer.Commands
             Father = 0;
 
         }
-        public new async  Task Execute(ITelegramBotClient botClient, Conversation conversation)
+        public new async  Task<ChatStatus.Status> Execute(ITelegramBotClient botClient, Conversation conversation)
         {
             string text = "Доступные команды:";
             var buttonList = new List<InlineKeyboardButton>();
@@ -43,6 +43,8 @@ namespace Telegram_Bot___English_trainer.Commands
 
             await botClient.SendTextMessageAsync(
             chatId: conversation.GetId(), text: text, replyMarkup: keyboard);
+
+            return conversation.chatStatus;
         }
     }
 }

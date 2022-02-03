@@ -21,7 +21,7 @@ namespace Telegram_Bot___English_trainer.Commands
 
             //Console.WriteLine($"Создана команда {CommandName}");
         }
-        public new async  Task Execute(ITelegramBotClient botClient, Conversation conversation)
+        public new async  Task<ChatStatus.Status> Execute(ITelegramBotClient botClient, Conversation conversation)
         {
             string text = "*О данном проекте:*" +
                 "\nРобот-тренер по английскому языку разработан в рамках курса \"Разработчик С#\"" +
@@ -31,8 +31,8 @@ namespace Telegram_Bot___English_trainer.Commands
                         
             await botClient.SendTextMessageAsync(
             chatId: conversation.GetId(), text: text, parseMode: ParseMode.Markdown);
-                       
 
+            return ChatStatus.Status.Root;
         }
     }
 }

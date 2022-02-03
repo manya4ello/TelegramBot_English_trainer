@@ -14,7 +14,7 @@ namespace Telegram_Bot___English_trainer
         private Dictionary<long, Conversation> chatList;
         public static Dictionary dictionary;
         public static Word wordtoadd;
-        public static ChatStatus.Status chatstatus;
+        
 
         public BotLogic(ITelegramBotClient botClientRes)
         {
@@ -24,9 +24,11 @@ namespace Telegram_Bot___English_trainer
             dictionary.ReadFile();
             botClient = botClientRes;
             wordtoadd = new Word();
-            chatstatus = ChatStatus.Status.Root;
+           
         }
 
+        
+                
         public Task HandleErrorAsync(ITelegramBotClient botClient, Exception exception, CancellationToken cancellationToken)
         {
             var ErrorMessage = exception switch
@@ -49,6 +51,7 @@ namespace Telegram_Bot___English_trainer
         public async Task CheckIFTXTCommand(ITelegramBotClient botClient, Message message)
         {
             var chatID = message.Chat.Id;
+           
 
             if (!chatList.ContainsKey(chatID))
             {
@@ -62,8 +65,10 @@ namespace Telegram_Bot___English_trainer
                                
 
             }
-            
+
             var chat = chatList[chatID];
+            var chatstatus = chat.chatStatus;
+            
             chat.AddMessage(message);
 
             if (chatstatus == ChatStatus.Status.AddWord || chatstatus == ChatStatus.Status.AddedRus || chatstatus == ChatStatus.Status.AddedEng
@@ -72,6 +77,8 @@ namespace Telegram_Bot___English_trainer
                 Console.WriteLine("Чего-то добавляем");
                 await WorkWithCommand(botClient, chatID, new Commands.AddWord());
             }
+
+
 
             ICommand curCommand;
 
@@ -148,13 +155,15 @@ namespace Telegram_Bot___English_trainer
             Console.WriteLine($"Выполняется команда {command.CommandName}");
 
             var chat = chatList[chatid];
+            
+
             switch (command)
             {
                 case (Commands.Dic):
                     {
                         chat.actualCommands.Clear();
                         chat.actualCommands = chat.Commands.GetChildren(command.Id);
-                        chatstatus = ChatStatus.Status.Dic;
+                        //chatList[chatid].chatStatus = ChatStatus.Status.Dic;
                         break;
                     }
                 case (Commands.Test):
@@ -167,20 +176,20 @@ namespace Telegram_Bot___English_trainer
                     {
                         chat.actualCommands.Clear();
                         chat.actualCommands = chat.Commands.GetChildren(1);
-                        chatstatus = ChatStatus.Status.Root;
+                        //chatstatus = ChatStatus.Status.Root;
                         break;
                     }
                 case (Commands.AddWord):
                     {
-                        Console.WriteLine($"Case пройден. Chatstatus {chatstatus}");
+                        Console.WriteLine($"Case пройден. Chatstatus {chatList[chatid].chatStatus}");
                         //chat.actualCommands.Clear();
                         //chat.actualCommands = chat.Commands.GetChildren(1);                       
                         break;
                     }
             }
 
-            
-            command.Execute(botClient, chat);
+
+            chatList[chatid].chatStatus = await command.Execute(botClient, chat);
 
         }
 
