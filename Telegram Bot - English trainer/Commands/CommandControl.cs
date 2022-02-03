@@ -21,9 +21,9 @@ namespace Telegram_Bot___English_trainer.Commands
            CommandsRange.Add(new ShowDic());
             CommandsRange.Add(new About());
 
-            Console.WriteLine("Формируем список команд:");
-            foreach (var command in CommandsRange)
-                Console.WriteLine($"В список команд добавлена команда: {command.CommandName},/ {command.CommandCode}");
+            //Console.WriteLine("Формируем список команд:");
+            //foreach (var command in CommandsRange)
+            //    Console.WriteLine($"В список команд добавлена команда: {command.CommandName},/ {command.CommandCode}");
         }
 
         public Dictionary<long, ICommand> GetChildren (int father)
@@ -33,9 +33,7 @@ namespace Telegram_Bot___English_trainer.Commands
             foreach (var command in all.CommandsRange)  
                 if (command.Father == father)
                     Children.Add(command.Id, command);
-            //пока не уверен надо ли
-            //var command2 = new Show();
-            //Children.Add(command2.Id, command2);
+            
 
             return Children;
         }

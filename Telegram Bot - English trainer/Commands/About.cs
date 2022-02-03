@@ -19,7 +19,7 @@ namespace Telegram_Bot___English_trainer.Commands
             Id = 1;
             Father = 1;
 
-            Console.WriteLine($"Создана команда {CommandName}");
+            //Console.WriteLine($"Создана команда {CommandName}");
         }
         public new async  Task Execute(ITelegramBotClient botClient, Conversation conversation)
         {

@@ -16,7 +16,7 @@ namespace Telegram_Bot___English_trainer.Commands
             CommandCode = "/showdic";
             Id = 100;
             Father = 10;
-            Console.WriteLine($"Создана команда {CommandName}");
+            
         }
         public new async Task Execute(ITelegramBotClient botClient, Conversation conversation)
         {

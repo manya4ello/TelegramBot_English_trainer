@@ -18,8 +18,7 @@ namespace Telegram_Bot___English_trainer.Commands
             CommandCode = "/Главное меню";
             Id = 3;
             Father = 0;
-
-            Console.WriteLine($"Создана команда {CommandName}");
+                        
         }
         public new async  Task Execute(ITelegramBotClient botClient, Conversation conversation)
         {

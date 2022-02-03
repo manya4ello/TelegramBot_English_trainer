@@ -14,12 +14,14 @@ namespace Telegram_Bot___English_trainer
         public enum Status
         {
             Root = 0,
-            AddWord = 1,
-            AddedRus =11,
-            AddedEng =12,
-            AddedTopic = 13,
-            DelWord =3,
-            Test = 2,
+            Dic = 1,
+            AddWord = 10,
+            AddedRus =101,
+            AddedEng =102,
+            AddedTopic = 103,
+            DelWord =20,
+            Test = 2
+            
         }
                 
     }

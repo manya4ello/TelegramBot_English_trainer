@@ -57,34 +57,28 @@ namespace Telegram_Bot___English_trainer
 
                 chatList.Add(chatID, newchat);
 
-                ICommand show = new Commands.Show();
-                ICommand root = new Commands.Root();
-                ICommand about = new Commands.About();
-                ReplyKeyboardMarkup replyKeyboardMarkup = new(new[]
-                 {
-                     new KeyboardButton[] { about.CommandCode, root.CommandCode, show.CommandCode },
-                 })
-                {
-                    ResizeKeyboard = true
-                };
-
-                Message sentMessage = await botClient.SendTextMessageAsync(
-                    chatId: chatID,
-                    text: "Выберите нужную опцию из меню",
-                    replyMarkup: replyKeyboardMarkup
-                     );
+                ICommand mainmenu = new Commands.Mainmenu();
+                mainmenu.Execute(botClient,chatList[chatID]);
+                               
 
             }
-            if (chatstatus==ChatStatus.Status.AddWord || chatstatus == ChatStatus.Status.AddedRus || chatstatus == ChatStatus.Status.AddedEng 
+            
+            var chat = chatList[chatID];
+            chat.AddMessage(message);
+
+            if (chatstatus == ChatStatus.Status.AddWord || chatstatus == ChatStatus.Status.AddedRus || chatstatus == ChatStatus.Status.AddedEng
                 || chatstatus == ChatStatus.Status.AddedTopic)
+            {
+                Console.WriteLine("Чего-то добавляем");
                 await WorkWithCommand(botClient, chatID, new Commands.AddWord());
+            }
 
             ICommand curCommand;
 
 
             if (chatList[chatID].IfCommand(message.Text, out curCommand))
             {
-                Console.WriteLine($"Принята команда {curCommand.CommandName}");
+                Console.WriteLine($"Принята команда из IfCommand {curCommand.CommandName}");
                 await WorkWithCommand(botClient, chatID, curCommand);
             }
 
@@ -104,6 +98,9 @@ namespace Telegram_Bot___English_trainer
                 show.Execute(botClient, newchat);
 
             }
+
+            var chat = chatList[chatID];
+            chat.AddMessage(query.Message);
 
             ICommand curCommand;
 
@@ -157,6 +154,7 @@ namespace Telegram_Bot___English_trainer
                     {
                         chat.actualCommands.Clear();
                         chat.actualCommands = chat.Commands.GetChildren(command.Id);
+                        chatstatus = ChatStatus.Status.Dic;
                         break;
                     }
                 case (Commands.Test):
@@ -174,14 +172,14 @@ namespace Telegram_Bot___English_trainer
                     }
                 case (Commands.AddWord):
                     {
-                        chat.actualCommands.Clear();
-                        chat.actualCommands = chat.Commands.GetChildren(1);
-                        chatstatus = ChatStatus.Status.AddWord;
+                        Console.WriteLine($"Case пройден. Chatstatus {chatstatus}");
+                        //chat.actualCommands.Clear();
+                        //chat.actualCommands = chat.Commands.GetChildren(1);                       
                         break;
                     }
             }
 
-
+            
             command.Execute(botClient, chat);
 
         }
