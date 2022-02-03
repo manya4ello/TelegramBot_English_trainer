@@ -15,7 +15,7 @@ namespace Telegram_Bot___English_trainer
         public Dictionary()
         {
             Vocabulary = new List<Word>();
-
+            rnd = new Random();
 
         }
 
@@ -44,15 +44,14 @@ namespace Telegram_Bot___English_trainer
                         if (line.Length > 1)
                         {
                             string[] parts = line.Split(";");
-                            Word word = new Word() { Russian = parts[0], English = parts[1], Topic = parts[2] };
-                            Console.WriteLine($"{word.Russian} \t{word.English} \t{word.Topic}");
+                            Word word = new Word() { Russian = parts[0], English = parts[1], Topic = parts[2] };                            
                             Vocabulary.Add(word);
                         }
                     }
 
                     Console.WriteLine($"Читаем данные из файла \t{sourcefile}");
-                    foreach (Word item in Vocabulary)
-                        Console.WriteLine($"{item.Russian} \t{item.English} \t{item.Topic}");
+                    //foreach (Word item in Vocabulary)
+                    //    Console.WriteLine($"{item.Russian} \t{item.English} \t{item.Topic}");
                 }
 
             }
@@ -66,25 +65,24 @@ namespace Telegram_Bot___English_trainer
 
         public static async void ShowAll(ITelegramBotClient botClient, long ChatId)
         {
-            rnd = new Random(Vocabulary.Count);
+
 
             string text = $"Всего в словаре {Vocabulary.Count} пар слов" +
-                $"Но, из-за ограничений по размеру, высылаю 10 случайных пар" +
-                "\n*Русское значение \tАнглийское значение \tТема*";
+                $"\nНо, из-за ограничений по размеру, высылаю 10 случайных пар"; 
+                //"\n*Русское значение\t-\tАнглийское значение \t/\tТема*";
 
             await botClient.SendTextMessageAsync(ChatId, text, parseMode: ParseMode.Markdown);
 
-            text = String.Empty;
+            text = "\n*Русское значение\t-\tАнглийское значение \t/\tТема*";
             int v;
             for (int i = 0; i < 10; i++)
             {
                 v = rnd.Next(Vocabulary.Count);
                 Console.WriteLine(v);
-                text += $"\n{Vocabulary[v].Russian} \t{Vocabulary[v].English} \t{Vocabulary[v].Topic}";
+                text += $"\n{Vocabulary[v].Russian}\t-\t{Vocabulary[v].English}\t/\t({Vocabulary[v].Topic})";
             }
-
-            Console.WriteLine(text);
-            await botClient.SendTextMessageAsync(ChatId, text);
+                        
+            await botClient.SendTextMessageAsync(ChatId, text, parseMode: ParseMode.Markdown);
 
 
 

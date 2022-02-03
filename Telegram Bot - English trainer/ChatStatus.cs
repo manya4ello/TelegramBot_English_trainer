@@ -15,6 +15,10 @@ namespace Telegram_Bot___English_trainer
         {
             Root = 0,
             AddWord = 1,
+            AddedRus =11,
+            AddedEng =12,
+            AddedTopic = 13,
+            DelWord =3,
             Test = 2,
         }
                 

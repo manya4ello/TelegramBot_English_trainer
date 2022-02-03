@@ -20,13 +20,9 @@ namespace Telegram_Bot___English_trainer.Commands
         }
         public new async Task Execute(ITelegramBotClient botClient, Conversation conversation)
         {
-            await botClient.SendTextMessageAsync(
-            chatId: conversation.GetId(), text: "Добро пожаловать в словарь");
-
-            Dictionary.ShowAll(botClient, conversation.GetId());
             
-            //Show show = new Show();
-            //show.Execute(botClient, conversation);  
+            Dictionary.ShowAll(botClient, conversation.GetId());
+                        
 
         }
     }

@@ -16,9 +16,43 @@ namespace Telegram_Bot___English_trainer.Commands
             Id = 11;
             Father = 10;
         }
-        public Task Execute()
+        public new async Task Execute(ITelegramBotClient botClient, Conversation conversation)
         {
-            throw new NotImplementedException();
+            string mes = conversation.GetLastMessage();
+           switch (BotLogic.chatstatus)
+            {
+                case ChatStatus.Status.AddWord:
+                {
+                        BotLogic.wordtoadd.Russian = mes;
+                        await botClient.SendTextMessageAsync(chatId: conversation.GetId(), text: "Введите значение на английском:");
+                        BotLogic.chatstatus = ChatStatus.Status.AddedRus;
+                        break;
+                }
+                case ChatStatus.Status.AddedRus:
+                 {
+                        BotLogic.wordtoadd.English = mes;
+                        await botClient.SendTextMessageAsync(chatId: conversation.GetId(), text: "Введите тему:");
+                        BotLogic.chatstatus = ChatStatus.Status.AddedEng;
+                        break;
+                 }
+                case ChatStatus.Status.AddedEng:
+                    {
+                        BotLogic.wordtoadd.Topic = mes;
+                        string text = $"Проверьте правильность:" +
+                            $"\n*Рус:*\t{BotLogic.wordtoadd.Russian}\t*Анг:*\t{BotLogic.wordtoadd.English}\t*Тема:*\t({BotLogic.wordtoadd.Topic})";
+                        await botClient.SendTextMessageAsync(chatId: conversation.GetId(), text: text);
+                        BotLogic.chatstatus = ChatStatus.Status.AddedTopic;
+                        break;
+                    }
+                default:
+                    {
+                        await botClient.SendTextMessageAsync(chatId: conversation.GetId(), text: "Введите значение на русском:");
+                        BotLogic.chatstatus = ChatStatus.Status.AddWord;
+                        break;
+                    }
+            }
+           
+            Console.WriteLine(BotLogic.chatstatus);
         }
     }
 }

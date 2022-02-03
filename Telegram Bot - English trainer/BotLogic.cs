@@ -13,6 +13,8 @@ namespace Telegram_Bot___English_trainer
 
         private Dictionary<long, Conversation> chatList;
         public static Dictionary dictionary;
+        public static Word wordtoadd;
+        public static ChatStatus.Status chatstatus;
 
         public BotLogic(ITelegramBotClient botClientRes)
         {
@@ -20,8 +22,9 @@ namespace Telegram_Bot___English_trainer
             chatList = new Dictionary<long, Conversation>();
             dictionary = new Dictionary();
             dictionary.ReadFile();
-
             botClient = botClientRes;
+            wordtoadd = new Word();
+            chatstatus = ChatStatus.Status.Root;
         }
 
         public Task HandleErrorAsync(ITelegramBotClient botClient, Exception exception, CancellationToken cancellationToken)
@@ -50,6 +53,7 @@ namespace Telegram_Bot___English_trainer
             if (!chatList.ContainsKey(chatID))
             {
                 var newchat = new Conversation(message.Chat);
+                               
 
                 chatList.Add(chatID, newchat);
 
@@ -71,6 +75,9 @@ namespace Telegram_Bot___English_trainer
                      );
 
             }
+            if (chatstatus==ChatStatus.Status.AddWord || chatstatus == ChatStatus.Status.AddedRus || chatstatus == ChatStatus.Status.AddedEng 
+                || chatstatus == ChatStatus.Status.AddedTopic)
+                await WorkWithCommand(botClient, chatID, new Commands.AddWord());
 
             ICommand curCommand;
 
@@ -162,6 +169,14 @@ namespace Telegram_Bot___English_trainer
                     {
                         chat.actualCommands.Clear();
                         chat.actualCommands = chat.Commands.GetChildren(1);
+                        chatstatus = ChatStatus.Status.Root;
+                        break;
+                    }
+                case (Commands.AddWord):
+                    {
+                        chat.actualCommands.Clear();
+                        chat.actualCommands = chat.Commands.GetChildren(1);
+                        chatstatus = ChatStatus.Status.AddWord;
                         break;
                     }
             }
