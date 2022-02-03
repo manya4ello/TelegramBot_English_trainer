@@ -21,6 +21,8 @@ namespace Telegram_Bot___English_trainer
 
         public Word wordtoadd;
         public string wordtodell;
+
+        public Test test;
         
         public Conversation(Chat chat)
         {
@@ -39,7 +41,8 @@ namespace Telegram_Bot___English_trainer
             wordtoadd = new Word();
             wordtodell = string.Empty;
             dictionary = new Dictionary();
-            dictionary.ReadFile();
+            test = new Test();
+
         }
 
         public long GetId() => telegramChat.Id;

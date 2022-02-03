@@ -17,9 +17,16 @@ namespace Telegram_Bot___English_trainer.Commands
             Father = 1;
             Level = ChatStatus.Status.Root;
         }
-        public Task Execute(Chat chat)
+        public new async Task<ChatStatus.Status> Execute(ITelegramBotClient botClient, Conversation conversation)
         {
-            throw new NotImplementedException();
+
+            await botClient.SendTextMessageAsync(
+            chatId: conversation.GetId(), text: "Для начала теста выберите направление перевода", parseMode: ParseMode.Markdown);
+
+            ICommand confirm = new Commands.TestDir();
+            confirm.Execute(botClient, conversation);
+
+            return ChatStatus.Status.Test;
         }
     }
 }

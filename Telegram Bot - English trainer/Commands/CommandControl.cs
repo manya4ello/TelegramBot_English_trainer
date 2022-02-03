@@ -13,17 +13,18 @@ namespace Telegram_Bot___English_trainer.Commands
         public CommandControl()
         {
             CommandsRange = new List<ICommand>();
-           
+
+            CommandsRange.Add(new Mainmenu());
             CommandsRange.Add(new Dic());
             CommandsRange.Add(new AddWord());
             CommandsRange.Add(new DelWord());
             CommandsRange.Add(new Test());
            CommandsRange.Add(new ShowDic());
             CommandsRange.Add(new About());
+            CommandsRange.Add(new LoadDic());
 
-            //Console.WriteLine("Формируем список команд:");
-            //foreach (var command in CommandsRange)
-            //    Console.WriteLine($"В список команд добавлена команда: {command.CommandName},/ {command.CommandCode}");
+
+            
         }
 
         public Dictionary<long, ICommand> GetChildren (ChatStatus.Status status)
@@ -33,7 +34,7 @@ namespace Telegram_Bot___English_trainer.Commands
             foreach (var command in all.CommandsRange)  
                 if (command.Level == status)
                     Children.Add(command.Id, command);
-            
+           
 
             return Children;
         }

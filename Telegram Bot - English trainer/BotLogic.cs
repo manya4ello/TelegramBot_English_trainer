@@ -284,7 +284,7 @@ namespace Telegram_Bot___English_trainer
 
                         foreach (var word in chatList[chatid].dictionary.Vocabulary)
                             if (word.Russian == mes)
-                            { text = $"\n*Русское значение: {word.Russian}\t-\tАнглийское значение: {word.English} \t/\tТема: {word.Topic}*";
+                            { text = $"\n*Русское значение:* {word.Russian}\t-\t*Английское значение:* {word.English} \t/\t*Тема:* {word.Topic}";
                                 check = true; }
                         if (!check)
                         {

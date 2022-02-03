@@ -22,6 +22,7 @@ namespace Telegram_Bot___English_trainer
         public void ReadFile()
         {
 
+            List<Word> FromFile =new List<Word>();
             string sourcefile = Environment.GetFolderPath(Environment.SpecialFolder.DesktopDirectory) + @"\Dic utf8.csv";
             string text;
 
@@ -44,14 +45,24 @@ namespace Telegram_Bot___English_trainer
                         if (line.Length > 1)
                         {
                             string[] parts = line.Split(";");
-                            Word word = new Word() { Russian = parts[0], English = parts[1], Topic = parts[2] };                            
-                            Vocabulary.Add(word);
+                            Word word = new Word() { Russian = parts[0], English = parts[1], Topic = parts[2] };
+                            FromFile.Add(word);
                         }
                     }
 
                     Console.WriteLine($"Читаем данные из файла \t{sourcefile}");
-                    //foreach (Word item in Vocabulary)
-                    //    Console.WriteLine($"{item.Russian} \t{item.English} \t{item.Topic}");
+
+                    bool contains = false;
+                    foreach (Word wordfromfile in FromFile)
+                    {
+                        foreach (Word wordfromdic in Vocabulary)
+                            if (wordfromfile.Russian == wordfromdic.Russian)
+                                contains = true;
+                        if (!contains)
+                            Vocabulary.Add(wordfromfile);
+                        contains = false;
+                    }
+
                 }
 
             }

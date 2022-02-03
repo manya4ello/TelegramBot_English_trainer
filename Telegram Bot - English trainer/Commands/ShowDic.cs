@@ -12,7 +12,7 @@ namespace Telegram_Bot___English_trainer.Commands
 
         public ShowDic()
             {
-            CommandName = "Все слова";
+            CommandName = "База слов";
             CommandCode = "/showdic";
             Id = 100;
             Father = 10;
@@ -21,6 +21,12 @@ namespace Telegram_Bot___English_trainer.Commands
         }
         public new async Task<ChatStatus.Status> Execute(ITelegramBotClient botClient, Conversation conversation)
         {
+
+            if (conversation.dictionary.Vocabulary.Count<1)
+            {
+                await botClient.SendTextMessageAsync(conversation.GetId(), "К сожалению, Ваш словарь пуст. Добавьте слова или подгрузите из нашей базы данных.", parseMode: ParseMode.Markdown);
+                return ChatStatus.Status.Dic;
+            }
                 Random rnd = new Random();  
                
                 string text = $"Всего в словаре {conversation.dictionary.Vocabulary.Count} пар слов" +
