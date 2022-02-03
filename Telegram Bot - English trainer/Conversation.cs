@@ -17,12 +17,16 @@ namespace Telegram_Bot___English_trainer
 
         public ChatStatus.Status chatStatus;
 
+        public Dictionary dictionary;
+
         public Word wordtoadd;
+        public string wordtodell;
+        
         public Conversation(Chat chat)
         {
             telegramChat = chat;
             telegramMessages = new List<Message>();
-            actualCommands = new Dictionary <long, ICommand>(); //сразу надо закидывать команды уровня 0
+            actualCommands = new Dictionary <long, ICommand>(); 
             chatStatus = ChatStatus.Status.Root;
             Commands = new Commands.CommandControl();
                 foreach (var command in Commands.CommandsRange)
@@ -33,6 +37,9 @@ namespace Telegram_Bot___English_trainer
                     }
             chatStatus = ChatStatus.Status.Root;
             wordtoadd = new Word();
+            wordtodell = string.Empty;
+            dictionary = new Dictionary();
+            dictionary.ReadFile();
         }
 
         public long GetId() => telegramChat.Id;
@@ -76,6 +83,13 @@ namespace Telegram_Bot___English_trainer
             if (message == root.CommandCode)
             {
                 command = root;
+                return true;
+            }
+
+            ICommand about = new Commands.About();
+            if (message == about.CommandCode)
+            {
+                command = about;
                 return true;
             }
 

@@ -12,15 +12,14 @@ namespace Telegram_Bot___English_trainer
         private ITelegramBotClient botClient;
 
         private Dictionary<long, Conversation> chatList;
-        public static Dictionary dictionary;
+       
                 
 
         public BotLogic(ITelegramBotClient botClientRes)
         {
 
             chatList = new Dictionary<long, Conversation>();
-            dictionary = new Dictionary();
-            dictionary.ReadFile();
+            
             botClient = botClientRes;
                        
         }
@@ -69,15 +68,7 @@ namespace Telegram_Bot___English_trainer
             
             chat.AddMessage(message);
 
-            if (chatstatus == ChatStatus.Status.AddWord || chatstatus == ChatStatus.Status.AddedRus || chatstatus == ChatStatus.Status.AddedEng
-                || chatstatus == ChatStatus.Status.AddedTopic)
-            {
-                Console.WriteLine("Чего-то добавляем");
-                await AddWordLogic(botClient, chatID);
-            }
-
-
-
+           
             ICommand curCommand;
 
 
@@ -85,6 +76,20 @@ namespace Telegram_Bot___English_trainer
             {
                 Console.WriteLine($"Принята команда из IfCommand {curCommand.CommandName}");
                 await WorkWithCommand(botClient, chatID, curCommand);
+            }
+            else
+            {
+                if (chatstatus == ChatStatus.Status.AddWord || chatstatus == ChatStatus.Status.AddedRus || chatstatus == ChatStatus.Status.AddedEng
+               || chatstatus == ChatStatus.Status.AddedTopic)
+                {
+                    Console.WriteLine("Чего-то добавляем");
+                    await AddWordLogic(botClient, chatID);
+                }
+                if (chatstatus == ChatStatus.Status.DelWord || chatstatus == ChatStatus.Status.DelConf)
+                {
+                    Console.WriteLine("Чего-то удаляем");
+                    await DelWordLogic(botClient, chatID);
+                }
             }
 
         }
@@ -150,45 +155,24 @@ namespace Telegram_Bot___English_trainer
 
         private async Task WorkWithCommand(ITelegramBotClient botClient, long chatid, ICommand command)
         {
-            Console.WriteLine($"Выполняется команда {command.CommandName}");
+            Console.WriteLine($"Выполняется команда {command.CommandName}, статус чата: {chatList[chatid].chatStatus}");
 
             var chat = chatList[chatid];
-            
 
-            switch (command)
-            {
-                case (Commands.Dic):
-                    {
-                        chat.actualCommands.Clear();
-                        chat.actualCommands = chat.Commands.GetChildren(command.Id);
-                        //chatList[chatid].chatStatus = ChatStatus.Status.Dic;
-                        break;
-                    }
-                case (Commands.Test):
-                    {
-                        chat.actualCommands.Clear();
-                        chat.actualCommands = chat.Commands.GetChildren(command.Id);
-                        break;
-                    }
-                case (Commands.Root):
-                    {
-                        chat.actualCommands.Clear();
-                        chat.actualCommands = chat.Commands.GetChildren(1);
-                        //chatstatus = ChatStatus.Status.Root;
-                        break;
-                    }
-                case (Commands.AddWord):
-                    {
-                        Console.WriteLine($"Case пройден. Chatstatus {chatList[chatid].chatStatus}");
-                        //chat.actualCommands.Clear();
-                        //chat.actualCommands = chat.Commands.GetChildren(1);                       
-                        break;
-                    }
-            }
-
+            chat.actualCommands = chat.Commands.GetChildren(chatList[chatid].chatStatus);
 
             chatList[chatid].chatStatus = await command.Execute(botClient, chat);
+            
+            //chat.actualCommands.Clear();
+            chat.actualCommands = chat.Commands.GetChildren(chatList[chatid].chatStatus);
 
+            ICommand check = new Commands.Mainmenu();
+            if (command.Id == check.Id)
+                return;
+             check = new Commands.Show();
+            if (command.Id != check.Id)                        
+               chatList[chatid].chatStatus = await check.Execute(botClient, chat);
+            
         }
 
         private async Task AddWordLogic(ITelegramBotClient botClient, long chatid)
@@ -234,7 +218,7 @@ namespace Telegram_Bot___English_trainer
                         if (mes == Commands.WordConfirm.Yes)
                         {
                             bool dubl = false;
-                            foreach (Word word in Dictionary.Vocabulary)
+                            foreach (Word word in chatList[chatid].dictionary.Vocabulary)
                             {
                                 if (word.Russian == chatList[chatid].wordtoadd.Russian)
                                 {
@@ -245,7 +229,7 @@ namespace Telegram_Bot___English_trainer
 
                             if (!dubl)
                             {
-                                Dictionary.Vocabulary.Add(chatList[chatid].wordtoadd);
+                                chatList[chatid].dictionary.Vocabulary.Add(chatList[chatid].wordtoadd);
                                 await botClient.SendTextMessageAsync(chatId: chatid, text: "Слово успешно добавлено");
                             }
                         }
@@ -256,13 +240,16 @@ namespace Telegram_Bot___English_trainer
                         }
 
                         chatList[chatid].wordtoadd = new Word();
-                        chatstatus = ChatStatus.Status.Dic;
+                        chatList[chatid].chatStatus = ChatStatus.Status.Dic;
 
                         ICommand mainmenu = new Commands.Mainmenu();
-                        mainmenu.Execute(botClient, chatList[chatid]);
+                        await WorkWithCommand(botClient, chatid, mainmenu);
+                        ICommand dic = new Commands.Dic();
+                        await WorkWithCommand(botClient, chatid, dic);
 
-                        ICommand show = new Commands.Show();
-                        show.Execute(botClient, chatList[chatid]);
+                        
+
+
                         break;
                     }
                 default:
@@ -275,6 +262,99 @@ namespace Telegram_Bot___English_trainer
 
             Console.WriteLine($"AddWordLogic: На выходе {chatstatus}");
             chatList[chatid].chatStatus = chatstatus;
+        }
+
+        private async Task DelWordLogic(ITelegramBotClient botClient, long chatid)
+        {
+            string mes = chatList[chatid].GetLastMessage();
+            
+            var wordtoad = chatList[chatid].wordtoadd;
+
+            Console.WriteLine($"DelWordLogic: последняя команда:{ mes}, статус: {chatList[chatid].chatStatus}");
+
+            switch (chatList[chatid].chatStatus)
+            {
+
+                case ChatStatus.Status.DelWord:
+                    {
+                        
+                        chatList[chatid].wordtodell = mes;
+                        bool check = false;
+                        string text = string.Empty;
+
+                        foreach (var word in chatList[chatid].dictionary.Vocabulary)
+                            if (word.Russian == mes)
+                            { text = $"\n*Русское значение: {word.Russian}\t-\tАнглийское значение: {word.English} \t/\tТема: {word.Topic}*";
+                                check = true; }
+                        if (!check)
+                        {
+                            await botClient.SendTextMessageAsync(chatId: chatid, text: "Такого слова в словаре нет");
+                            chatList[chatid].wordtodell = String.Empty;
+                            chatList[chatid].chatStatus = ChatStatus.Status.Dic;
+                        }
+                        else
+                        {
+                            await botClient.SendTextMessageAsync(chatId: chatid, text: $"Найденно слово {text} \n*Удалить?*",parseMode: ParseMode.Markdown);
+
+                            chatList[chatid].chatStatus = ChatStatus.Status.DelConf;
+                            
+                            ICommand confirm = new Commands.WordConfirm();
+                            confirm.Execute(botClient, chatList[chatid]);
+                           
+                        }
+                        
+                        break;
+                    }                
+                case ChatStatus.Status.DelConf:
+                    {
+                        var vocabulary = chatList[chatid].dictionary.Vocabulary;
+                        if (mes == Commands.WordConfirm.Yes)
+                        {
+                            bool check = false;
+                            Word del = new Word();
+
+                            foreach (var word in chatList[chatid].dictionary.Vocabulary)
+                                if (word.Russian == chatList[chatid].wordtodell)
+                                {
+                                    del = word;
+                                    check = true;
+                                }
+                            if (check)
+                            {
+                                chatList[chatid].dictionary.Vocabulary.Remove(del);
+                                await botClient.SendTextMessageAsync(chatId: chatid, text: "Слово успешно удалено");
+                            }
+                                                       
+                        }
+
+                        if (mes == Commands.WordConfirm.No)
+                        {
+                            await botClient.SendTextMessageAsync(chatId: chatid, text: "Слово не удалено");
+                        }
+
+                        chatList[chatid].wordtodell = String.Empty;
+                        chatList[chatid].chatStatus = ChatStatus.Status.Dic;
+
+                        ICommand mainmenu = new Commands.Mainmenu();
+                        await WorkWithCommand(botClient, chatid, mainmenu);
+                        ICommand dic = new Commands.Dic();
+                        await WorkWithCommand(botClient, chatid, dic);
+
+
+
+
+                        break;
+                    }
+                default:
+                    {
+                        await botClient.SendTextMessageAsync(chatId: chatid, text: "А хз, что произошло");
+                        chatList[chatid].chatStatus = ChatStatus.Status.Root;
+                        break;
+                    }
+            }
+
+            Console.WriteLine($"DellWordLogic: На выходе {chatList[chatid].chatStatus}");
+            
         }
     }
 }

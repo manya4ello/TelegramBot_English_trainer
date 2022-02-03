@@ -17,12 +17,15 @@ namespace Telegram_Bot___English_trainer.Commands
             CommandCode = "/del";
             Id = 12;
             Father = 10;
-
-    }
-            public Task Execute()
-            {
-                throw new NotImplementedException();
-            }
+            
+            Level = ChatStatus.Status.Dic;
+        }
+        public new async Task<ChatStatus.Status> Execute(ITelegramBotClient botClient, Conversation conversation)
+        {
+            await botClient.SendTextMessageAsync(chatId: conversation.GetId(), text: "Введите русское значение слова, которе хотите удалить:");
+                                    
+            return ChatStatus.Status.DelWord;
+        }
         
     }
 }

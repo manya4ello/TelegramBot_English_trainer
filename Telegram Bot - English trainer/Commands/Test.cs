@@ -15,6 +15,7 @@ namespace Telegram_Bot___English_trainer.Commands
             CommandCode = "/test";
             Id = 20;
             Father = 1;
+            Level = ChatStatus.Status.Root;
         }
         public Task Execute(Chat chat)
         {

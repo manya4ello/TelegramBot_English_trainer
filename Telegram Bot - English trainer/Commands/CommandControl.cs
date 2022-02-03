@@ -26,12 +26,12 @@ namespace Telegram_Bot___English_trainer.Commands
             //    Console.WriteLine($"В список команд добавлена команда: {command.CommandName},/ {command.CommandCode}");
         }
 
-        public Dictionary<long, ICommand> GetChildren (int father)
+        public Dictionary<long, ICommand> GetChildren (ChatStatus.Status status)
         {
             CommandControl all = new CommandControl();
             var Children = new Dictionary<long,ICommand>();
             foreach (var command in all.CommandsRange)  
-                if (command.Father == father)
+                if (command.Level == status)
                     Children.Add(command.Id, command);
             
 

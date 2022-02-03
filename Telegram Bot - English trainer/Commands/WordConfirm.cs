@@ -18,6 +18,7 @@ namespace Telegram_Bot___English_trainer.Commands
             Id = 110;
             Father = 11;
             
+            Level = ChatStatus.Status.Any;
         }
 
         public new async Task<ChatStatus.Status> Execute(ITelegramBotClient botClient, Conversation conversation)

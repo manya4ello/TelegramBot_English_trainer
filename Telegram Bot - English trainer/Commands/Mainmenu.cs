@@ -14,8 +14,9 @@ namespace Telegram_Bot___English_trainer.Commands
             CommandName = "Главное меню";
             CommandCode = "/mm";
             Id = 999;
-            Father = 0;
-            
+            Father = 1;
+           
+            Level = ChatStatus.Status.Any;
         }
 
         public new async Task<ChatStatus.Status> Execute(ITelegramBotClient botClient, Conversation conversation)
@@ -35,7 +36,7 @@ namespace Telegram_Bot___English_trainer.Commands
 
             Message sentMessage = await botClient.SendTextMessageAsync(
                 chatId: conversation.GetId(),
-                text: "Выберите нужную опцию из меню",
+                text: "Установленна клавиатура с возможностью выбора",
                 replyMarkup: replyKeyboardMarkup
                  );
 

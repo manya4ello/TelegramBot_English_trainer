@@ -18,8 +18,9 @@ namespace Telegram_Bot___English_trainer.Commands
             CommandCode = "/О проекте";
             Id = 1;
             Father = 1;
-
-            //Console.WriteLine($"Создана команда {CommandName}");
+          
+            Level = ChatStatus.Status.Any;
+            
         }
         public new async  Task<ChatStatus.Status> Execute(ITelegramBotClient botClient, Conversation conversation)
         {
@@ -32,7 +33,7 @@ namespace Telegram_Bot___English_trainer.Commands
             await botClient.SendTextMessageAsync(
             chatId: conversation.GetId(), text: text, parseMode: ParseMode.Markdown);
 
-            return ChatStatus.Status.Root;
+            return conversation.chatStatus; ;
         }
     }
 }

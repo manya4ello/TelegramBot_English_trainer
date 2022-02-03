@@ -20,8 +20,9 @@ namespace Telegram_Bot___English_trainer
             AddedEng =102,
             AddedTopic = 103,
             DelWord =20,
-            Test = 2
-            
+            DelConf=200,
+            Test = 2,
+            Any = 999
         }
                 
     }

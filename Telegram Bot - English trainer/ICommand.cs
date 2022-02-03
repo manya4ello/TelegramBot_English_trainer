@@ -12,7 +12,9 @@ namespace Telegram_Bot___English_trainer
         string CommandName { get; }
         string CommandCode { get; }
         int Father { get; }
-
+              
+        
+        ChatStatus.Status Level { get; }
         public Task<ChatStatus.Status> Execute(ITelegramBotClient botClient, Conversation conversation);
     }
 }

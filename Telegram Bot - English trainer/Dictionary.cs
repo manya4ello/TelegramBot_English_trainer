@@ -8,9 +8,9 @@ using System.Collections;
 
 namespace Telegram_Bot___English_trainer
 {
-    internal class Dictionary
+    public class Dictionary
     {
-        public static List<Word> Vocabulary;
+        public List<Word> Vocabulary;
         public static Random rnd;
         public Dictionary()
         {
@@ -63,30 +63,7 @@ namespace Telegram_Bot___English_trainer
 
         }
 
-        public static async void ShowAll(ITelegramBotClient botClient, long ChatId)
-        {
-
-
-            string text = $"Всего в словаре {Vocabulary.Count} пар слов" +
-                $"\nНо, из-за ограничений по размеру, высылаю 10 случайных пар"; 
-                //"\n*Русское значение\t-\tАнглийское значение \t/\tТема*";
-
-            await botClient.SendTextMessageAsync(ChatId, text, parseMode: ParseMode.Markdown);
-
-            text = "\n*Русское значение\t-\tАнглийское значение \t/\tТема*";
-            int v;
-            for (int i = 0; i < 10; i++)
-            {
-                v = rnd.Next(Vocabulary.Count);
-                Console.WriteLine(v);
-                text += $"\n{Vocabulary[v].Russian}\t-\t{Vocabulary[v].English}\t/\t({Vocabulary[v].Topic})";
-            }
-                        
-            await botClient.SendTextMessageAsync(ChatId, text, parseMode: ParseMode.Markdown);
-
-
-
-        }
+       
 
     }
 

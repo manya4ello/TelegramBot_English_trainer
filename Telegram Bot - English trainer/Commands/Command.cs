@@ -16,6 +16,10 @@ namespace Telegram_Bot___English_trainer.Commands
 
         public int Father { get; set; }
 
+       
+
+        public ChatStatus.Status Level { get; set; }
+
         public Task<ChatStatus.Status> Execute(ITelegramBotClient botClient, Conversation conversation)
         {
             throw new NotImplementedException();

@@ -17,33 +17,38 @@ namespace Telegram_Bot___English_trainer.Commands
             CommandName = "Показать команды";
             CommandCode = "/Показать возможные команды";
             Id = 2;
-            Father = 0;
-
+            Father = 1;
+            
+            Level = ChatStatus.Status.Any;
         }
         public new async  Task<ChatStatus.Status> Execute(ITelegramBotClient botClient, Conversation conversation)
         {
-            string text = "Доступные команды:";
-            var buttonList = new List<InlineKeyboardButton>();
+            var actualCommands = conversation.actualCommands;
 
-            ICommand command;
-            foreach (var commandline in conversation.actualCommands)
+            if (actualCommands.Count >0)
             {
-                command = commandline.Value;
+                string text = "Доступные команды:";
+                var buttonList = new List<InlineKeyboardButton>();
 
-                buttonList.Add(new InlineKeyboardButton(command.CommandName)
+                ICommand command;
+                foreach (var commandline in actualCommands)
                 {
-                    Text = command.CommandName,
-                    CallbackData = command.CommandCode
+                    command = commandline.Value;
+
+                    buttonList.Add(new InlineKeyboardButton(command.CommandName)
+                    {
+                        Text = command.CommandName,
+                        CallbackData = command.CommandCode
+                    }
+                          );
                 }
-                      );
+
+
+                var keyboard = new InlineKeyboardMarkup(buttonList);
+
+                await botClient.SendTextMessageAsync(
+                chatId: conversation.GetId(), text: text, replyMarkup: keyboard);
             }
-
-           
-            var keyboard = new InlineKeyboardMarkup(buttonList);
-
-            await botClient.SendTextMessageAsync(
-            chatId: conversation.GetId(), text: text, replyMarkup: keyboard);
-
             return conversation.chatStatus;
         }
     }

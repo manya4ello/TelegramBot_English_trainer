@@ -16,15 +16,15 @@ namespace Telegram_Bot___English_trainer.Commands
             CommandCode = "/dic";
             Id = 10;
             Father = 1;
-            Console.WriteLine($"Создана команда {CommandName}");
+           
+            Level = ChatStatus.Status.Root;
+            
         }
         public new async Task<ChatStatus.Status> Execute(ITelegramBotClient botClient, Conversation conversation)
         {
             await botClient.SendTextMessageAsync(
             chatId: conversation.GetId(), text: "Добро пожаловать в словарь");
-
-            Show show = new Show();
-            show.Execute(botClient, conversation);
+                      
 
             return ChatStatus.Status.Dic;
         }
