@@ -90,6 +90,11 @@ namespace Telegram_Bot___English_trainer
                     Console.WriteLine("Чего-то удаляем");
                     await DelWordLogic(botClient, chatID);
                 }
+                if (chatstatus == ChatStatus.Status.Test || chatstatus == ChatStatus.Status.TestInProcess)
+                {
+                    Console.WriteLine("Чего-то тестируем");
+                    await TestLogic(botClient, chatID);
+                }
             }
 
         }
@@ -264,10 +269,129 @@ namespace Telegram_Bot___English_trainer
             chatList[chatid].chatStatus = chatstatus;
         }
 
+        private async Task TestLogic(ITelegramBotClient botClient, long chatid)
+        {
+           Random random = new Random();    
+            string mes = chatList[chatid].GetLastMessage();
+            
+            var wordtoad = chatList[chatid].wordtoadd;
+
+            Console.WriteLine($"TestLogic: последняя команда:{ mes}, статус: {chatList[chatid].chatStatus}");
+
+            switch (chatList[chatid].chatStatus)
+            {
+
+                case ChatStatus.Status.Test:
+                    {
+                        chatList[chatid].test.score = 0;
+                        chatList[chatid].test.CurQuest = 1;
+
+                        if (mes == Commands.TestDir.RusEng)
+                        {
+                            chatList[chatid].test.direction = Test.Direction.RusEng;
+                                                       
+                        }
+
+                        if (mes == Commands.TestDir.EngRus)
+                        {
+                            chatList[chatid].test.direction = Test.Direction.EngRus;
+
+                        }
+
+                        if (mes == Commands.TestDir.Rand)
+                        {
+                            chatList[chatid].test.direction = Test.Direction.Rand;
+
+                        }
+
+                        await botClient.SendTextMessageAsync(chatId: chatid, text: $"Приступаем к тесту. Вам предстоит ответить на {chatList[chatid].test.MaxNofQuestions} вопросов");
+                        chatList[chatid].chatStatus = ChatStatus.Status.TestInProcess;
+
+                        break;
+                    }                
+                case ChatStatus.Status.TestInProcess:
+                    {
+                        
+                        if (chatList[chatid].test.CurQuest == chatList[chatid].test.MaxNofQuestions)
+                        {
+                            string text = $"Ваш результат - {chatList[chatid].test.score} правильных ответов из {chatList[chatid].test.MaxNofQuestions}";
+                            await botClient.SendTextMessageAsync(chatId: chatid, text: text);
+                            chatList[chatid].test.score = 0;
+                            chatList[chatid].test.CurQuest = 1;
+
+                            break;
+                        }
+
+                        var wrong = new List<string>();
+                        int rnd = random.Next(chatList[chatid].dictionary.Vocabulary.Count);
+                        switch (chatList[chatid].test.direction)
+                        {
+                            case Test.Direction.RusEng:
+                                {
+                                    wrong = chatList[chatid].dictionary.GetRandQuestion(true, chatList[chatid].dictionary.Vocabulary[rnd], 7);
+                                    wrong.Add(chatList[chatid].dictionary.Vocabulary[rnd].English);
+                                    break;
+                                }
+                            case Test.Direction.EngRus: 
+                                { wrong = chatList[chatid].dictionary.GetRandQuestion(false, chatList[chatid].dictionary.Vocabulary[rnd], 7);
+                                    wrong.Add(chatList[chatid].dictionary.Vocabulary[rnd].Russian);
+                                    break; 
+                                }
+                                
+                        }
+                        wrong.Sort();
+
+                        KeyboardButton[][] buttonList = new KeyboardButton[4][];
+                        
+                        
+                        for (int i=0; i<wrong.Count;)
+                        {
+                            for (int j = 0; j < 4; j++)
+                            {
+                                buttonList[j][i] = wrong[i];
+
+                            }
+                            i += 4;                                
+                        }
+
+
+                        
+
+                       
+
+                        ReplyKeyboardMarkup replyKeyboardMarkup = new(buttonList)
+                        {
+                            ResizeKeyboard = true
+                        };
+
+                        Message sentMessage = await botClient.SendTextMessageAsync(
+                            chatId: chatid,
+                            text: "Подтверждаете?",
+                            replyMarkup: replyKeyboardMarkup
+                            );
+
+
+                        chatList[chatid].test.CurQuest++;
+
+
+                        break;
+                    }
+                //default:
+                //    {
+                //        await botClient.SendTextMessageAsync(chatId: chatid, text: "А хз, что произошло");
+                //        chatList[chatid].chatStatus = ChatStatus.Status.Root;
+                //        break;
+                //    }
+            }
+
+            Console.WriteLine($"TestLogic: На выходе {chatList[chatid].chatStatus}");
+            
+        }
+
         private async Task DelWordLogic(ITelegramBotClient botClient, long chatid)
         {
             string mes = chatList[chatid].GetLastMessage();
-            
+
             var wordtoad = chatList[chatid].wordtoadd;
 
             Console.WriteLine($"DelWordLogic: последняя команда:{ mes}, статус: {chatList[chatid].chatStatus}");
@@ -277,15 +401,17 @@ namespace Telegram_Bot___English_trainer
 
                 case ChatStatus.Status.DelWord:
                     {
-                        
+
                         chatList[chatid].wordtodell = mes;
                         bool check = false;
                         string text = string.Empty;
 
                         foreach (var word in chatList[chatid].dictionary.Vocabulary)
                             if (word.Russian == mes)
-                            { text = $"\n*Русское значение:* {word.Russian}\t-\t*Английское значение:* {word.English} \t/\t*Тема:* {word.Topic}";
-                                check = true; }
+                            {
+                                text = $"\n*Русское значение:* {word.Russian}\t-\t*Английское значение:* {word.English} \t/\t*Тема:* {word.Topic}";
+                                check = true;
+                            }
                         if (!check)
                         {
                             await botClient.SendTextMessageAsync(chatId: chatid, text: "Такого слова в словаре нет");
@@ -294,17 +420,17 @@ namespace Telegram_Bot___English_trainer
                         }
                         else
                         {
-                            await botClient.SendTextMessageAsync(chatId: chatid, text: $"Найденно слово {text} \n*Удалить?*",parseMode: ParseMode.Markdown);
+                            await botClient.SendTextMessageAsync(chatId: chatid, text: $"Найденно слово {text} \n*Удалить?*", parseMode: ParseMode.Markdown);
 
                             chatList[chatid].chatStatus = ChatStatus.Status.DelConf;
-                            
+
                             ICommand confirm = new Commands.WordConfirm();
                             confirm.Execute(botClient, chatList[chatid]);
-                           
+
                         }
-                        
+
                         break;
-                    }                
+                    }
                 case ChatStatus.Status.DelConf:
                     {
                         var vocabulary = chatList[chatid].dictionary.Vocabulary;
@@ -324,7 +450,7 @@ namespace Telegram_Bot___English_trainer
                                 chatList[chatid].dictionary.Vocabulary.Remove(del);
                                 await botClient.SendTextMessageAsync(chatId: chatid, text: "Слово успешно удалено");
                             }
-                                                       
+
                         }
 
                         if (mes == Commands.WordConfirm.No)
@@ -354,7 +480,7 @@ namespace Telegram_Bot___English_trainer
             }
 
             Console.WriteLine($"DellWordLogic: На выходе {chatList[chatid].chatStatus}");
-            
+
         }
     }
 }

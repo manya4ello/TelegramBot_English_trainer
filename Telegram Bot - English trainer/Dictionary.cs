@@ -74,7 +74,28 @@ namespace Telegram_Bot___English_trainer
 
         }
 
-       
+       public List<string> GetRandQuestion(bool ruseng, Word target, int numanswers)
+        {
+            Random random = new Random();
+
+            List<string> wrong = new List<string>();
+            Word randword = new Word();
+
+            for (int i = 0; i < numanswers; i++)
+            {
+                randword = Vocabulary[random.Next(Vocabulary.Count)];
+                if (randword == target)
+                    i--;
+                else
+                    if (ruseng)
+                    wrong.Add(randword.English);
+                    else
+                    wrong.Add(randword.Russian);
+
+            }
+
+            return wrong;
+        }
 
     }
 

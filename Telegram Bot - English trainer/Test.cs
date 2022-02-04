@@ -8,13 +8,27 @@ namespace Telegram_Bot___English_trainer
 {
     public class Test
     {
-        private int MaxNofQuestions {get;set;}
-        private int CurQuest {get;set;}
-        private int score { get; set; }
-    public Test()
+        public enum Direction
         {
-            MaxNofQuestions = 3;
-
+            NotDef =0,
+            RusEng = 1,
+            EngRus,
+            Rand
         }
+       
+        public int MaxNofQuestions { get; set; }
+        public Direction direction {get;set;}
+        public int CurQuest { get; set; }
+        public int score { get; set; }
+        public Test()
+            {
+                MaxNofQuestions = 3;
+            direction = Direction.NotDef;
+
+              }
     }
 }
+ 
+    
+
+
