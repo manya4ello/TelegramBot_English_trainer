@@ -26,7 +26,7 @@ namespace Telegram_Bot___English_trainer
         public int NumberOfWrongQuest { get; set; } 
         public Test()
             {
-                MaxNofQuestions = 3;
+                MaxNofQuestions = 5;
             direction = Direction.NotDef;
             NumberOfWrongQuest = 4;
               }

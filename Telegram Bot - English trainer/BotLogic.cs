@@ -280,7 +280,7 @@ namespace Telegram_Bot___English_trainer
 
             switch (chatList[chatid].chatStatus)
             {
-
+                //Начало теста
                 case ChatStatus.Status.Test:
                     {
                         chatList[chatid].test.score = 0;
@@ -311,14 +311,15 @@ namespace Telegram_Bot___English_trainer
                         chatList[chatid].chatStatus = ChatStatus.Status.TestInProcess;
 
                         //замена меню направления текста на общее
-                        Message sentMessage = await botClient.SendTextMessageAsync(
-                            chatId: chatid,
-                            text: "Removing keyboard",
-                            replyMarkup: new ReplyKeyboardRemove());
+                        //Message sentMessage = await botClient.SendTextMessageAsync(
+                        //    chatId: chatid,
+                        //    text: "Removing keyboard",
+                        //    replyMarkup: new ReplyKeyboardRemove());
 
                         //определяем первый вопрос, показываем его и печатаем ответы
                         ShowCurrentQuestion(SetQuestion());
-                        
+                        var stop = new Commands.TestStop();
+                        chatList[chatid].actualCommands.Add(stop.Id, stop);
 
                         break;
                     }                
@@ -347,6 +348,7 @@ namespace Telegram_Bot___English_trainer
                             await botClient.SendTextMessageAsync(chatId: chatid, text: text);
                             chatList[chatid].test.score = 0;
                             chatList[chatid].test.CurQuest = 1;
+                            chatList[chatid].test.direction = Test.Direction.NotDef;
                             chatList[chatid].test.AskedWord = new Word();
                             chatList[chatid].chatStatus = ChatStatus.Status.Root;
                             WorkWithCommand(botClient, chatid, new Commands.Mainmenu());
