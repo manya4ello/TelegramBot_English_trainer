@@ -284,7 +284,7 @@ namespace Telegram_Bot___English_trainer
                 case ChatStatus.Status.Test:
                     {
                         chatList[chatid].test.score = 0;
-                        chatList[chatid].test.CurQuest = 1;
+                        chatList[chatid].test.CurQuest = 0;
 
                         if (mes == Commands.TestDir.RusEng)
                         {
@@ -301,91 +301,149 @@ namespace Telegram_Bot___English_trainer
                         if (mes == Commands.TestDir.Rand)
                         {
                             chatList[chatid].test.direction = Test.Direction.Rand;
-
+                            var ruseng = false;
+                            if (random.Next(1) ==0)
+                                ruseng = true;
+                            chatList[chatid].test.CurQuestRusEng = ruseng;
                         }
 
                         await botClient.SendTextMessageAsync(chatId: chatid, text: $"Приступаем к тесту. Вам предстоит ответить на {chatList[chatid].test.MaxNofQuestions} вопросов");
                         chatList[chatid].chatStatus = ChatStatus.Status.TestInProcess;
+
+                        //замена меню направления текста на общее
+                        Message sentMessage = await botClient.SendTextMessageAsync(
+                            chatId: chatid,
+                            text: "Removing keyboard",
+                            replyMarkup: new ReplyKeyboardRemove());
+
+                        //определяем первый вопрос, показываем его и печатаем ответы
+                        ShowCurrentQuestion(SetQuestion());
+                        
 
                         break;
                     }                
                 case ChatStatus.Status.TestInProcess:
                     {
                         
+
+                        //Оценка результата
+                        
+                        if (chatList[chatid].test.CheckAnswer(mes, chatList[chatid].test.CurQuestRusEng))
+                        {
+                            await botClient.SendTextMessageAsync(chatId: chatid, text: "Правильный ответ");
+                            chatList[chatid].test.score += 1;
+                            
+                        }
+                        else
+                        {
+                            await botClient.SendTextMessageAsync(chatId: chatid, text: $"К сожалению, вы ошиблись. " +
+                                $"\nПравильный ответ - *{chatList[chatid].test.AskedWord.Russian} - {chatList[chatid].test.AskedWord.English}*",parseMode: ParseMode.Markdown);
+                        }
+
+                        //Если это был последний вопрос
                         if (chatList[chatid].test.CurQuest == chatList[chatid].test.MaxNofQuestions)
                         {
                             string text = $"Ваш результат - {chatList[chatid].test.score} правильных ответов из {chatList[chatid].test.MaxNofQuestions}";
                             await botClient.SendTextMessageAsync(chatId: chatid, text: text);
                             chatList[chatid].test.score = 0;
                             chatList[chatid].test.CurQuest = 1;
-
+                            chatList[chatid].test.AskedWord = new Word();
+                            chatList[chatid].chatStatus = ChatStatus.Status.Root;
+                            WorkWithCommand(botClient, chatid, new Commands.Mainmenu());
                             break;
                         }
 
-                        var wrong = new List<string>();
-                        int rnd = random.Next(chatList[chatid].dictionary.Vocabulary.Count);
-                        switch (chatList[chatid].test.direction)
-                        {
-                            case Test.Direction.RusEng:
-                                {
-                                    wrong = chatList[chatid].dictionary.GetRandQuestion(true, chatList[chatid].dictionary.Vocabulary[rnd], 7);
-                                    wrong.Add(chatList[chatid].dictionary.Vocabulary[rnd].English);
-                                    break;
-                                }
-                            case Test.Direction.EngRus: 
-                                { wrong = chatList[chatid].dictionary.GetRandQuestion(false, chatList[chatid].dictionary.Vocabulary[rnd], 7);
-                                    wrong.Add(chatList[chatid].dictionary.Vocabulary[rnd].Russian);
-                                    break; 
-                                }
-                                
-                        }
-                        wrong.Sort();
+                        //Задаем новый вопрос и ответы
 
-                        KeyboardButton[][] buttonList = new KeyboardButton[4][];
                         
-                        
-                        for (int i=0; i<wrong.Count;)
+                        if (chatList[chatid].test.direction == Test.Direction.Rand)
                         {
-                            for (int j = 0; j < 4; j++)
-                            {
-                                buttonList[j][i] = wrong[i];
-
-                            }
-                            i += 4;                                
+                            bool qdir = false;
+                            var randq = random.Next(1);
+                            if (randq == 0)
+                                qdir = true;
+                            chatList[chatid].test.CurQuestRusEng = qdir;
                         }
 
+                        ShowCurrentQuestion(SetQuestion());
 
-                        
-
-                       
-
-                        ReplyKeyboardMarkup replyKeyboardMarkup = new(buttonList)
-                        {
-                            ResizeKeyboard = true
-                        };
-
-                        Message sentMessage = await botClient.SendTextMessageAsync(
-                            chatId: chatid,
-                            text: "Подтверждаете?",
-                            replyMarkup: replyKeyboardMarkup
-                            );
-
-
-                        chatList[chatid].test.CurQuest++;
+                                             
 
 
                         break;
                     }
-                //default:
-                //    {
-                //        await botClient.SendTextMessageAsync(chatId: chatid, text: "А хз, что произошло");
-                //        chatList[chatid].chatStatus = ChatStatus.Status.Root;
-                //        break;
-                //    }
+                default:
+                    {
+                        await botClient.SendTextMessageAsync(chatId: chatid, text: "А хз, что произошло");
+                        chatList[chatid].chatStatus = ChatStatus.Status.Root;
+                        break;
+                    }
             }
 
             Console.WriteLine($"TestLogic: На выходе {chatList[chatid].chatStatus}");
             
+            //Выбирает следующий ответ и добавляет к списку ответов 7 неправильных
+            List<string> SetQuestion ()
+            {
+                var wrong = new List<string>();
+                int rnd = random.Next(chatList[chatid].dictionary.Vocabulary.Count);
+                chatList[chatid].test.AskedWord = chatList[chatid].dictionary.Vocabulary[rnd];
+
+
+
+                if (chatList[chatid].test.CurQuestRusEng)
+                {
+                    wrong = chatList[chatid].dictionary.GetRandQuestion(true, chatList[chatid].dictionary.Vocabulary[rnd], 7);
+                    wrong.Add(chatList[chatid].dictionary.Vocabulary[rnd].English);
+
+                }
+                else
+                {
+                    wrong = chatList[chatid].dictionary.GetRandQuestion(false, chatList[chatid].dictionary.Vocabulary[rnd], 7);
+                    wrong.Add(chatList[chatid].dictionary.Vocabulary[rnd].Russian);
+
+                }
+                                
+                wrong.Sort();
+
+                chatList[chatid].test.CurQuest += 1;
+
+                return wrong;
+            }
+
+            //выводит вопрос в чат, ответы на клавиатуру
+            async void  ShowCurrentQuestion(List<string>answers)
+            {
+                string lan = "Русском";
+                string question = chatList[chatid].test.AskedWord.English;
+                if (chatList[chatid].test.CurQuestRusEng)
+                {
+                    lan = "Английском";
+                    question = chatList[chatid].test.AskedWord.Russian;
+                }
+                
+                string text = $"Тема вопроса - {chatList[chatid].test.AskedWord.Topic} " +
+                    $"\n как будет на {lan} - {question}?";
+                
+               
+                var rkm = new ReplyKeyboardMarkup(new KeyboardButton(String.Empty));
+                var rows = new List<KeyboardButton[]>();
+                var cols = new List<KeyboardButton>();
+                
+                for (var Index = 0; Index < answers.Count; Index++)
+                {
+                    cols.Add(new KeyboardButton(answers[Index]));
+                    if (Index % 3 != 0) continue;
+                    rows.Add(cols.ToArray());
+                    cols = new List<KeyboardButton>();
+                }
+                rkm.Keyboard = rows.ToArray();
+
+
+                await botClient.SendTextMessageAsync(
+                    chatid, text, replyMarkup: rkm);
+
+            }
         }
 
         private async Task DelWordLogic(ITelegramBotClient botClient, long chatid)
