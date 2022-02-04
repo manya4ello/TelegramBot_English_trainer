@@ -49,7 +49,7 @@ namespace Telegram_Bot___English_trainer
         {
             var chatID = message.Chat.Id;
            
-
+           //если чата нет - добавляем
             if (!chatList.ContainsKey(chatID))
             {
                 var newchat = new Conversation(message.Chat);
@@ -74,7 +74,7 @@ namespace Telegram_Bot___English_trainer
 
             if (chatList[chatID].IfCommand(message.Text, out curCommand))
             {
-                Console.WriteLine($"Принята команда из IfCommand {curCommand.CommandName}");
+                Console.WriteLine($"{chatID}: Принята команда из IfCommand {curCommand.CommandName}");
                 await WorkWithCommand(botClient, chatID, curCommand);
             }
             else
@@ -149,12 +149,30 @@ namespace Telegram_Bot___English_trainer
 
             try
             {
+                long? newchatid = null;
+                if (update.Type == UpdateType.Message)
+                    newchatid = update.Message.Chat.Id;
+                if (update.Type == UpdateType.CallbackQuery)
+                    newchatid = update.CallbackQuery.Message.Chat.Id;
+                if (newchatid != null)
+                {
+                    if (chatList[(long)newchatid].firstimerun)
+                    {
+                        
+                        var help = new Commands.Help();
+                        string text = help.Content;
+                        await botClient.SendTextMessageAsync(chatId: newchatid, text: text,parseMode: ParseMode.Markdown  );
+                        chatList[(long)newchatid].firstimerun = false;
+                    }
+                   
+                }
                 await handler;
             }
             catch (Exception exception)
             {
                 await HandleErrorAsync(botClient, exception, cancellationToken);
             }
+
         }
 
 

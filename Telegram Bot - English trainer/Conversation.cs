@@ -23,6 +23,8 @@ namespace Telegram_Bot___English_trainer
         public string wordtodell;
 
         public Test test;
+
+        public bool firstimerun;
         
         public Conversation(Chat chat)
         {
@@ -42,7 +44,7 @@ namespace Telegram_Bot___English_trainer
             wordtodell = string.Empty;
             dictionary = new Dictionary();
             test = new Test();
-
+            firstimerun = true;
         }
 
         public long GetId() => telegramChat.Id;

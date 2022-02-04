@@ -21,36 +21,66 @@ namespace Telegram_Bot___English_trainer.Commands
         }
         public new async Task<ChatStatus.Status> Execute(ITelegramBotClient botClient, Conversation conversation)
         {
-
+            string text = String.Empty;
+            Random rnd = new Random();
+            
+            
             if (conversation.dictionary.Vocabulary.Count<1)
             {
                 await botClient.SendTextMessageAsync(conversation.GetId(), "К сожалению, Ваш словарь пуст. Добавьте слова или подгрузите из нашей базы данных.", parseMode: ParseMode.Markdown);
                 return ChatStatus.Status.Dic;
             }
-                Random rnd = new Random();  
-               
-                string text = $"Всего в словаре {conversation.dictionary.Vocabulary.Count} пар слов" +
+                
+            if (conversation.dictionary.Vocabulary.Count > 10)
+            {
+                text = $"Всего в словаре {conversation.dictionary.Vocabulary.Count} пар слов" +
                     $"\nНо, из-за ограничений по размеру, высылаю 10 случайных пар";
-                //"\n*Русское значение\t-\tАнглийское значение \t/\tТема*";
+                
 
                 await botClient.SendTextMessageAsync(conversation.GetId(), text, parseMode: ParseMode.Markdown);
 
-                text = "\n*Русское значение\t-\tАнглийское значение \t/\tТема*";
+                
+                text = "*Тема: \tРусское значение\t-\tАнглийское значение*";
+                
+               
                 int v;
                 for (int i = 0; i < 10; i++)
                 {
                     v = rnd.Next(conversation.dictionary.Vocabulary.Count);
-                    Console.WriteLine(v);
-                    text += $"\n{conversation.dictionary.Vocabulary[v].Russian}\t-\t{conversation.dictionary.Vocabulary[v].English}\t/\t({conversation.dictionary.Vocabulary[v].Topic})";
+                    text += $"\nТема:{conversation.dictionary.Vocabulary[v].Topic}: \t{conversation.dictionary.Vocabulary[v].Russian}\t-\t{conversation.dictionary.Vocabulary[v].English}."; 
+                                        
                 }
+
+                
+                await botClient.SendTextMessageAsync(conversation.GetId(), text, parseMode: ParseMode.Markdown);
+
+                return ChatStatus.Status.Dic;
+            }
+
+            if ((conversation.dictionary.Vocabulary.Count > 0)&&(conversation.dictionary.Vocabulary.Count < 11))
+            {
+                text = $"Всего в словаре {conversation.dictionary.Vocabulary.Count} пар слов";
+                await botClient.SendTextMessageAsync(conversation.GetId(), text, parseMode: ParseMode.MarkdownV2);
+
+               
+                text = "*Тема: \tРусское значение\t-\tАнглийское значение*";
+               
+
+                foreach (Word word in conversation.dictionary.Vocabulary)
+                {
+                    text += $"\n{word.Topic}: \t{word.Russian}\t-\t{word.English}";
+                    
+                    Console.WriteLine($"\n{word.Topic}: \t{word.Russian}\t-\t{word.English}");
+                }
+                Console.WriteLine(text);    
 
                 await botClient.SendTextMessageAsync(conversation.GetId(), text, parseMode: ParseMode.Markdown);
 
-
+                return ChatStatus.Status.Dic;
+            }
 
             
-
-
+            
 
 
             return ChatStatus.Status.Dic;  

@@ -22,7 +22,7 @@ namespace Telegram_Bot___English_trainer.Commands
         }
         public new async Task<ChatStatus.Status> Execute(ITelegramBotClient botClient, Conversation conversation)
         {
-            await botClient.SendTextMessageAsync(chatId: conversation.GetId(), text: "Введите русское значение слова, которе хотите удалить:");
+            await botClient.SendTextMessageAsync(chatId: conversation.GetId(), text: "Введите русское значение слова, которое хотите удалить:");
                                     
             return ChatStatus.Status.DelWord;
         }
