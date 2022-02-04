@@ -16,19 +16,19 @@ namespace Telegram_Bot___English_trainer.Commands
         {
             CommandName = "Помощь";
             CommandCode = "/help";
-            Id = 1;
-            Father = 1;
+            Id = 9;
+            Father = 0;
           
-            Level = ChatStatus.Status.Any;
+            Level = ChatStatus.Status.Root;
             
         }
         public new async  Task<ChatStatus.Status> Execute(ITelegramBotClient botClient, Conversation conversation)
         {
             string text = "*В помощь пользователю*" +
-                "\nРобот-тренер по английскому языку разработан в рамках курса \"Разработчик С#\"" +
-                "\nНадеемся он будет вам полезен!" +
-                "\nС уважением," +
-                "\nManya4ello";
+                "\nДля Вашего удобства навигация осуществляется кнопками" +
+                "\nУ данного робота есть два основных блока:" +
+                "\n1.*Словарь:* в нем вы можете добавлять новые слова и удалять их, а также подгрузить небольшой, подготовленный заранее, словарь" +
+                "\n2.*Тест:* вы можете проверить свои знания, вводя значения слов на английском или русском";
                         
             await botClient.SendTextMessageAsync(
             chatId: conversation.GetId(), text: text, parseMode: ParseMode.Markdown);
