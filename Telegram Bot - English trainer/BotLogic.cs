@@ -337,7 +337,7 @@ namespace Telegram_Bot___English_trainer
                         else
                         {
                             await botClient.SendTextMessageAsync(chatId: chatid, text: $"К сожалению, вы ошиблись. " +
-                                $"\nПравильный ответ - *{chatList[chatid].test.AskedWord.Russian} - {chatList[chatid].test.AskedWord.English}*",parseMode: ParseMode.Markdown);
+                                $"\nПравильный ответ: *{chatList[chatid].test.AskedWord.Russian} - {chatList[chatid].test.AskedWord.English}*",parseMode: ParseMode.Markdown);
                         }
 
                         //Если это был последний вопрос
@@ -381,8 +381,8 @@ namespace Telegram_Bot___English_trainer
             }
 
             Console.WriteLine($"TestLogic: На выходе {chatList[chatid].chatStatus}");
-            
-            //Выбирает следующий ответ и добавляет к списку ответов 7 неправильных
+
+            //Выбирает следующий ответ и добавляет к списку неправильных ответов 
             List<string> SetQuestion ()
             {
                 var wrong = new List<string>();
@@ -393,13 +393,13 @@ namespace Telegram_Bot___English_trainer
 
                 if (chatList[chatid].test.CurQuestRusEng)
                 {
-                    wrong = chatList[chatid].dictionary.GetRandQuestion(true, chatList[chatid].dictionary.Vocabulary[rnd], 7);
+                    wrong = chatList[chatid].dictionary.GetRandQuestion(true, chatList[chatid].dictionary.Vocabulary[rnd], chatList[chatid].test.NumberOfWrongQuest);
                     wrong.Add(chatList[chatid].dictionary.Vocabulary[rnd].English);
 
                 }
                 else
                 {
-                    wrong = chatList[chatid].dictionary.GetRandQuestion(false, chatList[chatid].dictionary.Vocabulary[rnd], 7);
+                    wrong = chatList[chatid].dictionary.GetRandQuestion(false, chatList[chatid].dictionary.Vocabulary[rnd], chatList[chatid].test.NumberOfWrongQuest);
                     wrong.Add(chatList[chatid].dictionary.Vocabulary[rnd].Russian);
 
                 }
@@ -424,18 +424,20 @@ namespace Telegram_Bot___English_trainer
                 
                 string text = $"Тема вопроса - {chatList[chatid].test.AskedWord.Topic} " +
                     $"\n как будет на {lan} - {question}?";
-                
-               
+
+
                 var rkm = new ReplyKeyboardMarkup(new KeyboardButton(String.Empty));
                 var rows = new List<KeyboardButton[]>();
                 var cols = new List<KeyboardButton>();
                 
                 for (var Index = 0; Index < answers.Count; Index++)
                 {
+                    
                     cols.Add(new KeyboardButton(answers[Index]));
-                    if (Index % 3 != 0) continue;
+                    if (Index % 2 != 0) continue;
                     rows.Add(cols.ToArray());
                     cols = new List<KeyboardButton>();
+                    
                 }
                 rkm.Keyboard = rows.ToArray();
 

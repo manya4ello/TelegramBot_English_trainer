@@ -94,6 +94,7 @@ namespace Telegram_Bot___English_trainer
 
             }
 
+           
             return wrong;
         }
         

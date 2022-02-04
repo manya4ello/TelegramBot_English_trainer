@@ -22,11 +22,13 @@ namespace Telegram_Bot___English_trainer
         public bool CurQuestRusEng { get; set; }    
         public int score { get; set; }
         public Word AskedWord { get; set; }
+
+        public int NumberOfWrongQuest { get; set; } 
         public Test()
             {
                 MaxNofQuestions = 3;
             direction = Direction.NotDef;
-
+            NumberOfWrongQuest = 4;
               }
 
         public bool CheckAnswer (string answer, bool RusEng)
