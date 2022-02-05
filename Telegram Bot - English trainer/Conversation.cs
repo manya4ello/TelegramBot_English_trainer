@@ -49,14 +49,20 @@ namespace Telegram_Bot___English_trainer
             test = new Test();
             firstimerun = true;
         }
-
+        /// <summary>
+        /// Получить номер чата
+        /// </summary>
+        /// <returns></returns>
         public long GetId() => telegramChat.Id;
                
         public void AddMessage(Message message)
         {
             telegramMessages.Add(message);
         }
-
+        /// <summary>
+        /// Возвращает список текстовых сообщений из чата
+        /// </summary>
+        /// <returns></returns>
         public List<string> GetTextMessages()
         {
             var textMessages = new List<string>();
@@ -72,8 +78,15 @@ namespace Telegram_Bot___English_trainer
             return textMessages;
         }
 
+        /// <summary>
+        /// Возвращает последнее сообщение в чате
+        /// </summary>
+        /// <returns></returns>
         public string GetLastMessage() => telegramMessages[^1].Text;
-
+        /// <summary>
+        /// Возвращает номер последнего сообщения
+        /// </summary>
+        /// <returns></returns>
         public int GetLastMessageID() => telegramMessages[^1].MessageId;
 
         public bool IfCommand (string message, out ICommand command)

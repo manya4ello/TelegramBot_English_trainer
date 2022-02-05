@@ -28,7 +28,13 @@ namespace Telegram_Bot___English_trainer
         }
 
         
-                
+        /// <summary>
+        /// Запускается если произошло исключение
+        /// </summary>
+        /// <param name="botClient">Текущий бот</param>
+        /// <param name="exception">Произошедшее исключение</param>
+        /// <param name="cancellationToken"></param>
+        /// <returns></returns>        
         public Task HandleErrorAsync(ITelegramBotClient botClient, Exception exception, CancellationToken cancellationToken)
         {
             var ErrorMessage = exception switch
@@ -41,6 +47,13 @@ namespace Telegram_Bot___English_trainer
             return Task.CompletedTask;
         }
 
+        /// <summary>
+        /// Запускается если получено изменение непонятного типа
+        /// </summary>
+        /// <param name="botClient">Текущий бот</param>
+        /// <param name="exception">Произошедшее исключение</param>
+        /// <param name="cancellationToken"></param>
+        /// <returns></returns>    
         public async Task UnknownUpdateHandlerAsync(ITelegramBotClient botClient, Update update)
         {
 
@@ -48,11 +61,17 @@ namespace Telegram_Bot___English_trainer
 
         }
 
+        /// <summary>
+        /// Проверяет является ли текстовое сообщение командой
+        /// </summary>
+        /// <param name="botClient">Бот</param>
+        /// <param name="message">Полученное сообщение</param>
+        /// <returns></returns>
         public async Task CheckIFTXTCommand(ITelegramBotClient botClient, Message message)
         {
             var chatID = message.Chat.Id;
            
-           //если чата нет - добавляем
+           //если чата нет в списке - добавляем
             if (!chatList.ContainsKey(chatID))
             {
                 var newchat = new Conversation(message.Chat);
@@ -74,12 +93,13 @@ namespace Telegram_Bot___English_trainer
            
             ICommand curCommand;
 
-
+            ///если команда, выполняем
             if (chatList[chatID].IfCommand(message.Text, out curCommand))
             {
                 Console.WriteLine($"{chatID}: Принята команда из IfCommand {curCommand.CommandName}");
                 await WorkWithCommand(botClient, chatID, curCommand);
             }
+            ///если не команда - скорее всего это ответ на какой-то вопрос
             else
             {
                 if (chatstatus == ChatStatus.Status.AddWord || chatstatus == ChatStatus.Status.AddedRus || chatstatus == ChatStatus.Status.AddedEng
@@ -101,7 +121,12 @@ namespace Telegram_Bot___English_trainer
             }
 
         }
-
+        /// <summary>
+        /// Обрабатывает ответ кнопкой
+        /// </summary>
+        /// <param name="botClient">Бот</param>
+        /// <param name="query">Ответ</param>
+        /// <returns></returns>
         public async Task CheckCallBackQuerry(ITelegramBotClient botClient, CallbackQuery query)
         {
             var chatID = query.Message.Chat.Id;
@@ -132,6 +157,13 @@ namespace Telegram_Bot___English_trainer
 
         }
 
+        /// <summary>
+        /// Задача по обработке любого входящего обновления
+        /// </summary>
+        /// <param name="botClient">Бот</param>
+        /// <param name="update">Полученное обновление</param>
+        /// <param name="cancellationToken"></param>
+        /// <returns></returns>
         public async Task HandleUpdateAsync(ITelegramBotClient botClient, Update update, CancellationToken cancellationToken)
         {
             var handler = update.Type switch
@@ -178,7 +210,13 @@ namespace Telegram_Bot___English_trainer
 
         }
 
-
+        /// <summary>
+        /// Задача по обработке команды
+        /// </summary>
+        /// <param name="botClient">Бот</param>
+        /// <param name="chatid">Номер чата</param>
+        /// <param name="command">Комманда</param>
+        /// <returns></returns>
         private async Task WorkWithCommand(ITelegramBotClient botClient, long chatid, ICommand command)
         {
             Console.WriteLine($"Выполняется команда {command.CommandName}, статус чата: {chatList[chatid].chatStatus}");
@@ -201,6 +239,12 @@ namespace Telegram_Bot___English_trainer
             
         }
 
+        /// <summary>
+        /// Задача по добавлению слова в словарь
+        /// </summary>
+        /// <param name="botClient">Бот</param>
+        /// <param name="chatid">номер чата</param>
+        /// <returns></returns>
         private async Task AddWordLogic(ITelegramBotClient botClient, long chatid)
         {
             string mes = chatList[chatid].GetLastMessage();
@@ -290,6 +334,12 @@ namespace Telegram_Bot___English_trainer
             chatList[chatid].chatStatus = chatstatus;
         }
 
+        /// <summary>
+        /// Задача по проведению теста
+        /// </summary>
+        /// <param name="botClient">Бот</param>
+        /// <param name="chatid">номер чата</param>
+        /// <returns></returns>
         private async Task TestLogic(ITelegramBotClient botClient, long chatid)
         {
            Random random = new Random();    
@@ -465,7 +515,12 @@ namespace Telegram_Bot___English_trainer
 
             }
         }
-
+        /// <summary>
+        /// Задача по удалению слова из словаря
+        /// </summary>
+        /// <param name="botClient">Бот</param>
+        /// <param name="chatid">Номер чата</param>
+        /// <returns></returns>
         private async Task DelWordLogic(ITelegramBotClient botClient, long chatid)
         {
             string mes = chatList[chatid].GetLastMessage();
