@@ -59,36 +59,20 @@ namespace Telegram_Bot___English_trainer
         {
             telegramMessages.Add(message);
         }
-        /// <summary>
-        /// Возвращает список текстовых сообщений из чата
-        /// </summary>
-        /// <returns></returns>
-        public List<string> GetTextMessages()
-        {
-            var textMessages = new List<string>();
-
-            foreach (var message in telegramMessages)
-            {
-                if (message.Text != null)
-                {
-                    textMessages.Add(message.Text);
-                }
-            }
-
-            return textMessages;
-        }
+        
 
         /// <summary>
         /// Возвращает последнее сообщение в чате
         /// </summary>
         /// <returns></returns>
         public string GetLastMessage() => telegramMessages[^1].Text;
+        
         /// <summary>
-        /// Возвращает номер последнего сообщения
+        /// Возвращает true, если сообщение является командой (и отдает команду)
         /// </summary>
+        /// <param name="message">сообщение</param>
+        /// <param name="command">возвращает команду</param>
         /// <returns></returns>
-        public int GetLastMessageID() => telegramMessages[^1].MessageId;
-
         public bool IfCommand (string message, out ICommand command)
         {
             Console.WriteLine($"на входе  {message}");
@@ -130,35 +114,7 @@ namespace Telegram_Bot___English_trainer
             command = null;
             return false;
         }
-
-        private async Task ShowCommands(ITelegramBotClient botClient, Conversation chat)
-        {
-            string text = "Доступные команды:";
-            var buttonList = new List<InlineKeyboardButton>();
-
-            ICommand command;
-            foreach (var commandline in actualCommands)
-            {
-                command = commandline.Value;
                 
-                buttonList.Add(new InlineKeyboardButton (command.CommandName)
-                    {
-                        Text = command.CommandName,
-                        CallbackData = command.CommandCode
-                    }
-                      );
-            }
-
-                        
-
-                var keyboard = new InlineKeyboardMarkup(buttonList);
-
-               
-            
-
-            await botClient.SendTextMessageAsync(
-            chatId: chat.GetId(), text: text, replyMarkup: keyboard);
-        }
 
     }
 }

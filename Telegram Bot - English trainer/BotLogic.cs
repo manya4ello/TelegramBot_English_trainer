@@ -107,17 +107,24 @@ namespace Telegram_Bot___English_trainer
                 {
                     Console.WriteLine("Чего-то добавляем");
                     await AddWordLogic(botClient, chatID);
+                    return;
                 }
                 if (chatstatus == ChatStatus.Status.DelWord || chatstatus == ChatStatus.Status.DelConf)
                 {
                     Console.WriteLine("Чего-то удаляем");
                     await DelWordLogic(botClient, chatID);
+                    return;
                 }
                 if (chatstatus == ChatStatus.Status.Test || chatstatus == ChatStatus.Status.TestInProcess)
                 {
                     Console.WriteLine("Чего-то тестируем");
                     await TestLogic(botClient, chatID);
+                    return; 
                 }
+                Console.WriteLine($"{chatID}: Принято неопознанное сообщение - {message.Text}");
+
+                var command = new Commands.Instructions();
+                await WorkWithCommand(botClient, chatID, command);
             }
 
         }
