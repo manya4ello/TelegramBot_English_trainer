@@ -307,13 +307,13 @@ namespace Telegram_Bot___English_trainer
                         if (mes == Commands.TestDir.RusEng)
                         {
                             chatList[chatid].test.direction = Test.Direction.RusEng;
-                                                       
+                            chatList[chatid].test.CurQuestRusEng = true;
                         }
 
                         if (mes == Commands.TestDir.EngRus)
                         {
                             chatList[chatid].test.direction = Test.Direction.EngRus;
-
+                            chatList[chatid].test.CurQuestRusEng = false;
                         }
 
                         if (mes == Commands.TestDir.Rand)
@@ -379,8 +379,9 @@ namespace Telegram_Bot___English_trainer
                         if (chatList[chatid].test.direction == Test.Direction.Rand)
                         {
                             bool qdir = false;
-                            var randq = random.Next(1);
-                            if (randq == 0)
+                            var randq = random.Next(100);
+                            Console.WriteLine($"случайное число:{randq}");
+                            if (randq < 51)
                                 qdir = true;
                             chatList[chatid].test.CurQuestRusEng = qdir;
                         }
@@ -460,8 +461,8 @@ namespace Telegram_Bot___English_trainer
                     
                 }
                 rkm.Keyboard = rows.ToArray();
-
-
+                
+               
                 await botClient.SendTextMessageAsync(
                     chatid, text, replyMarkup: rkm);
 

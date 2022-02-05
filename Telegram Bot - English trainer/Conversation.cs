@@ -98,6 +98,13 @@ namespace Telegram_Bot___English_trainer
                 return true;
             }
 
+            ICommand instr = new Commands.Instructions();
+            if (message == instr.CommandCode)
+            {
+                command = instr;
+                return true;
+            }
+
             foreach (var commandline in actualCommands)
                 if (actualCommands[commandline.Key].CommandCode.Equals(message??""))
                 {

@@ -31,7 +31,7 @@ namespace Telegram_Bot___English_trainer.Commands
                 return ChatStatus.Status.Dic;
             }
 
-            string text = $"Всего в словаре было {conversation.dictionary.Vocabulary.Count} пар слов";
+            string text = $"Всего в словаре было {start} пар слов";
 
             
 

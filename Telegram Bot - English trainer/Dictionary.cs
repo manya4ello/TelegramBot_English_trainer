@@ -16,13 +16,22 @@ namespace Telegram_Bot___English_trainer
         {
             Vocabulary = new List<Word>();
             rnd = new Random();
+            try
+            {
+                ReadFile(5);
+            }
+            catch (Exception ex)
+            { 
+                Console.WriteLine(ex.Message); 
+            }
 
         }
 
-        public void ReadFile()
+        public void ReadFile(int numb =0)
         {
-
+            Random random = new Random();   
             List<Word> FromFile =new List<Word>();
+            List<Word> FromFileOnlyNew = new List<Word>();
             string sourcefile = Environment.GetFolderPath(Environment.SpecialFolder.DesktopDirectory) + @"\Dic utf8.csv";
             string text;
 
@@ -59,7 +68,7 @@ namespace Telegram_Bot___English_trainer
                             if (wordfromfile.Russian == wordfromdic.Russian)
                                 contains = true;
                         if (!contains)
-                            Vocabulary.Add(wordfromfile);
+                            FromFileOnlyNew.Add(wordfromfile);
                         contains = false;
                     }
 
@@ -71,7 +80,29 @@ namespace Telegram_Bot___English_trainer
                 Console.WriteLine(ex.Message);
             }
 
+            //если параметр не введен - заливаем все данные в славарь
+            if (numb==0)
+            {
+                bool contains = false;
+                foreach (Word wordfromfile in FromFileOnlyNew)
+                {
+                    foreach (Word wordfromdic in Vocabulary)
+                        if (wordfromfile.Russian == wordfromdic.Russian)
+                            contains = true;
+                    if (!contains)
+                        Vocabulary.Add(wordfromfile);
+                    contains = false;
+                }
+            }
+            else
+            {
+                for (int i = 0; (i < numb)&&(i<FromFileOnlyNew.Count); i++)
+                {
+                    Vocabulary.Add((Word)FromFileOnlyNew[random.Next(FromFileOnlyNew.Count)]);
+                }
+            }
 
+            
         }
 
        public List<string> GetRandQuestion(bool ruseng, Word target, int numanswers)

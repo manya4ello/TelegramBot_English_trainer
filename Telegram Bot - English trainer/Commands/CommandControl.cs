@@ -24,7 +24,7 @@ namespace Telegram_Bot___English_trainer.Commands
             CommandsRange.Add(new LoadDic());
             CommandsRange.Add(new Help());
             CommandsRange.Add(new TestStop());
-
+            CommandsRange.Add(new Instructions());
         }
 
         public Dictionary<long, ICommand> GetChildren (ChatStatus.Status status)

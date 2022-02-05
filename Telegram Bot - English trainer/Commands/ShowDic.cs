@@ -47,7 +47,7 @@ namespace Telegram_Bot___English_trainer.Commands
                 for (int i = 0; i < 10; i++)
                 {
                     v = rnd.Next(conversation.dictionary.Vocabulary.Count);
-                    text += $"\nТема:{conversation.dictionary.Vocabulary[v].Topic}: \t{conversation.dictionary.Vocabulary[v].Russian}\t-\t{conversation.dictionary.Vocabulary[v].English}."; 
+                    text += $"\n{conversation.dictionary.Vocabulary[v].Topic}: \t{conversation.dictionary.Vocabulary[v].Russian}\t-\t{conversation.dictionary.Vocabulary[v].English}."; 
                                         
                 }
 
