@@ -32,7 +32,8 @@ namespace Telegram_Bot___English_trainer
             Random random = new Random();   
             List<Word> FromFile =new List<Word>();
             List<Word> FromFileOnlyNew = new List<Word>();
-            string sourcefile = Environment.GetFolderPath(Environment.SpecialFolder.DesktopDirectory) + @"\Dic utf8.csv";
+            // string sourcefile = Environment.GetFolderPath(Environment.SpecialFolder.DesktopDirectory) + @"\Dic utf8.csv";
+            string sourcefile = Directory.GetCurrentDirectory() + @"\Dic utf8.csv";
             string text;
 
             try
