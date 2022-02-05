@@ -8,7 +8,9 @@ namespace Telegram_Bot___English_trainer.Commands
 {
     internal class Mainmenu : Command, ICommand
     {
-        
+        /// <summary>
+        /// Команда выводит основные команды бота, доступные на любом уровне, в клавиатуру
+        /// </summary>
         public Mainmenu()
         {
             CommandName = "Главное меню";

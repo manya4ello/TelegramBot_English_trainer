@@ -22,8 +22,6 @@ namespace Telegram_Bot___English_trainer
             bot.Initialize();
             bot.Work();
 
-            //Dictionary dic = new Dictionary();
-            // dic.ReadFile();
                         
             Console.ReadLine();
        

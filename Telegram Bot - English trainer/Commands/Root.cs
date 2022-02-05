@@ -28,8 +28,7 @@ namespace Telegram_Bot___English_trainer.Commands
             await botClient.SendTextMessageAsync(
             chatId: conversation.GetId(), text: text, parseMode: ParseMode.Markdown);
 
-            //ICommand mm = new Mainmenu();
-            //await mm.Execute(botClient, conversation);
+            
             return ChatStatus.Status.Root;
         }
     }

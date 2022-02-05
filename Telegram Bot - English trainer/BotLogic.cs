@@ -7,6 +7,9 @@ using Telegram.Bot.Types.ReplyMarkups;
 
 namespace Telegram_Bot___English_trainer
 {
+    /// <summary>
+    /// Класс работы с логикой робота
+    /// </summary>
     internal class BotLogic
     {
         private ITelegramBotClient botClient;
@@ -327,13 +330,7 @@ namespace Telegram_Bot___English_trainer
 
                         await botClient.SendTextMessageAsync(chatId: chatid, text: $"Приступаем к тесту. Вам предстоит ответить на {chatList[chatid].test.MaxNofQuestions} вопросов");
                         chatList[chatid].chatStatus = ChatStatus.Status.TestInProcess;
-
-                        //замена меню направления текста на общее
-                        //Message sentMessage = await botClient.SendTextMessageAsync(
-                        //    chatId: chatid,
-                        //    text: "Removing keyboard",
-                        //    replyMarkup: new ReplyKeyboardRemove());
-
+                                                
                         //определяем первый вопрос, показываем его и печатаем ответы
                         ShowCurrentQuestion(SetQuestion());
                         var stop = new Commands.TestStop();

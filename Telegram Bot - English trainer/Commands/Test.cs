@@ -8,7 +8,9 @@ namespace Telegram_Bot___English_trainer.Commands
 {
     internal class Test : Command, ICommand
     {
-        
+        /// <summary>
+        /// Команда инициирует начало теста
+        /// </summary>
         public Test()
         {
             CommandName = "Тест";

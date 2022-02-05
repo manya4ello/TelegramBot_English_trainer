@@ -7,7 +7,9 @@ using System.Threading.Tasks;
 namespace Telegram_Bot___English_trainer
 {
 
-
+    /// <summary>
+    /// Статусы (уровни) в работе бота
+    /// </summary>
     public class ChatStatus
     {
 

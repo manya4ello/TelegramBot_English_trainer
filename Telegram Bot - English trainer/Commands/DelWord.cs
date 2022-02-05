@@ -8,9 +8,11 @@ namespace Telegram_Bot___English_trainer.Commands
 {
     internal class DelWord : Command, ICommand
     {
-        
-            
 
+
+        /// <summary>
+        /// Команда инициирующая удаление слова из словаря
+        /// </summary>
         public DelWord()
         {
             CommandName = "Удалить слово";

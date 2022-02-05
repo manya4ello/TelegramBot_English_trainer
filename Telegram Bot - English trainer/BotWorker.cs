@@ -2,7 +2,9 @@
 
 namespace Telegram_Bot___English_trainer
 {
-    
+    /// <summary>
+    /// Создает и запускает бота
+    /// </summary>
     internal class BotWorker
     {
         static ITelegramBotClient botClient;

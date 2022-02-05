@@ -6,6 +6,9 @@ using System.Threading.Tasks;
 
 namespace Telegram_Bot___English_trainer.Commands
 {
+    /// <summary>
+    /// Команда инициирующая переход в словарь
+    /// </summary>
     internal class Dic : Command, ICommand
     {
         

@@ -6,6 +6,9 @@ using System.Threading.Tasks;
 
 namespace Telegram_Bot___English_trainer
 {
+    /// <summary>
+    /// Определяет тест и все, что с ним связано
+    /// </summary>
     public class Test
     {
         public enum Direction
@@ -16,13 +19,33 @@ namespace Telegram_Bot___English_trainer
             Rand
         }
        
+        /// <summary>
+        /// Кол-во вопросов в тесте
+        /// </summary>
         public int MaxNofQuestions { get; set; }
+        /// <summary>
+        /// Направление тестирования
+        /// </summary>
         public Direction direction {get;set;}
+        /// <summary>
+        /// Номер текущего вопроса
+        /// </summary>
         public int CurQuest { get; set; }
-        public bool CurQuestRusEng { get; set; }    
+        /// <summary>
+        /// Направление тестирования текущего вопроса
+        /// </summary>
+        public bool CurQuestRusEng { get; set; }   
+        /// <summary>
+        /// Оценка: кол-во правильно отвеченных вопросов
+        /// </summary>
         public int score { get; set; }
+        /// <summary>
+        /// Текущее заданное слово
+        /// </summary>
         public Word AskedWord { get; set; }
-
+        /// <summary>
+        /// Кол-во альтернативных, неправильных ответов, которые добавятся к правильному
+        /// </summary>
         public int NumberOfWrongQuest { get; set; } 
         public Test()
             {
@@ -30,7 +53,12 @@ namespace Telegram_Bot___English_trainer
             direction = Direction.NotDef;
             NumberOfWrongQuest = 4;
               }
-
+        /// <summary>
+        /// Проверка правильности ответа
+        /// </summary>
+        /// <param name="answer">Полученный ответ</param>
+        /// <param name="RusEng">Направление теста с русского на английский?</param>
+        /// <returns></returns>
         public bool CheckAnswer (string answer, bool RusEng)
         {
             bool result = false;

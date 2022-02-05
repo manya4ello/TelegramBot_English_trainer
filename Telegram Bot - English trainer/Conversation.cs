@@ -6,6 +6,9 @@ using System.Threading.Tasks;
 
 namespace Telegram_Bot___English_trainer
 {
+    /// <summary>
+    /// Класс чата. Создается для каждого чата и содержит всю необходимую информацию, привязанную к нему
+    /// </summary>
     public class Conversation
     {
         private Chat telegramChat;

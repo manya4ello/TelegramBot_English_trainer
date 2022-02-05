@@ -6,6 +6,9 @@ using System.Threading.Tasks;
 
 namespace Telegram_Bot___English_trainer.Commands
 {
+    /// <summary>
+    /// Класс создает список легитимных команд
+    /// </summary>
     public class CommandControl
     {
         public List<ICommand> CommandsRange;
@@ -27,6 +30,11 @@ namespace Telegram_Bot___English_trainer.Commands
             CommandsRange.Add(new Instructions());
         }
 
+        /// <summary>
+        /// Возвращает команды, соответствующие определенному уровню меню
+        /// </summary>
+        /// <param name="status"></param>
+        /// <returns></returns>
         public Dictionary<long, ICommand> GetChildren (ChatStatus.Status status)
         {
             CommandControl all = new CommandControl();

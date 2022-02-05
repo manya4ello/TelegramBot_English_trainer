@@ -8,8 +8,10 @@ namespace Telegram_Bot___English_trainer.Commands
 {
     internal class ShowDic : Command, ICommand
     {
-        
 
+        /// <summary>
+        /// Команда выводит либо все слова словаря (если их 10 или меньше), либо 10 случайных слов
+        /// </summary>
         public ShowDic()
             {
             CommandName = "База слов";

@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 namespace Telegram_Bot___English_trainer.Commands
 {
     /// <summary>
-    /// Показывает все доступные команды
+    /// Выводит краткую информацию о проекте
     /// </summary>
     internal class About : Command, ICommand
     {

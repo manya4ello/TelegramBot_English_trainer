@@ -6,6 +6,9 @@ using System.Threading.Tasks;
 
 namespace Telegram_Bot___English_trainer.Commands
 {
+    /// <summary>
+    /// Команда позволяет подтвердить ввод слова в словарь (и тогда слово добавится), либо нет (тогда не добавится)
+    /// </summary>
     internal class WordConfirm : Command, ICommand
     {
         public static readonly string Yes = "Да";

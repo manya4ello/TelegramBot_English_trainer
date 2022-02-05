@@ -8,6 +8,9 @@ using System.Collections;
 
 namespace Telegram_Bot___English_trainer
 {
+    /// <summary>
+    /// Определяет словарь
+    /// </summary>
     public class Dictionary
     {
         public List<Word> Vocabulary;
@@ -27,6 +30,10 @@ namespace Telegram_Bot___English_trainer
 
         }
 
+        /// <summary>
+        /// Скачивает слова из файла (проверяя нет ли дублирования)
+        /// </summary>
+        /// <param name="numb">Если равен 0, то добавляются все слова, если >0, то случайные слова в колличестве полученного числа</param>
         public void ReadFile(int numb =0)
         {
             Random random = new Random();   

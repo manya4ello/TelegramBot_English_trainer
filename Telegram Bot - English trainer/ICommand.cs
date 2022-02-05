@@ -6,6 +6,9 @@ using System.Threading.Tasks;
 
 namespace Telegram_Bot___English_trainer
 {
+    /// <summary>
+    /// Интерфейс команды ботв
+    /// </summary>
     public interface ICommand
     {
         int Id { get; }

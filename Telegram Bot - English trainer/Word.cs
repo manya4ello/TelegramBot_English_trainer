@@ -6,6 +6,9 @@ using System.Threading.Tasks;
 
 namespace Telegram_Bot___English_trainer
 {
+    /// <summary>
+    /// Структура Слова
+    /// </summary>
     public class Word
     {
         public string Russian { get; set; }    

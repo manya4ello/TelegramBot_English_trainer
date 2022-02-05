@@ -6,6 +6,9 @@ using System.Threading.Tasks;
 
 namespace Telegram_Bot___English_trainer.Commands
 {
+    /// <summary>
+    /// Команда позволяет выбрать направление теста: с русского на английский, наоборот или случайным образом каждый вопрос
+    /// </summary>
     internal class TestDir : Command, ICommand
     {
         public static readonly string RusEng = "Рус/Англ";

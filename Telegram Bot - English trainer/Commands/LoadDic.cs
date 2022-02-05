@@ -8,8 +8,10 @@ namespace Telegram_Bot___English_trainer.Commands
 {
     internal class LoadDic : Command, ICommand
     {
-        
 
+        /// <summary>
+        /// Команда инициирующая добавление всех слов из файла в словарь
+        /// </summary>
         public LoadDic()
             {
             CommandName = "Подгрузить слова из базы";

@@ -6,6 +6,9 @@ using System.Threading.Tasks;
 
 namespace Telegram_Bot___English_trainer.Commands
 {
+    /// <summary>
+    /// Команда останавливает тест на любом вопросе
+    /// </summary>
     internal class TestStop : Command, ICommand
     {
         
