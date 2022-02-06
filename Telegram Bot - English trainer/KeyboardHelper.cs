@@ -36,7 +36,7 @@ namespace Telegram_Bot___English_trainer
         /// </summary>
         /// <param name="botClient"></param>
         /// <param name="chatid"></param>
-        public static async void RemoveKeyboard(ITelegramBotClient botClient, long chatid)
+        public static async Task RemoveKeyboard(ITelegramBotClient botClient, long chatid)
         {
             
             Message sentMessage = await botClient.SendTextMessageAsync(

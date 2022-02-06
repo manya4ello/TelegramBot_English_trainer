@@ -419,9 +419,9 @@ namespace Telegram_Bot___English_trainer
                         //Если это был последний вопрос
                         if (chatList[chatid].test.CurQuest == chatList[chatid].test.MaxNofQuestions)
                         {
-                            string text = $"Ваш результат - {chatList[chatid].test.score} правильных ответов из {chatList[chatid].test.MaxNofQuestions}";
+                            string text = $"*Ваш результат - {chatList[chatid].test.score}* правильных ответов из {chatList[chatid].test.MaxNofQuestions}";
                             Console.WriteLine($"{DateTime.Now}: чат:{chatid}: TestLogic: окончание теста. Правильных ответов из {chatList[chatid].test.MaxNofQuestions}");
-                            await botClient.SendTextMessageAsync(chatId: chatid, text: text);
+                            await botClient.SendTextMessageAsync(chatId: chatid, text: text,parseMode: ParseMode.Markdown);
                             chatList[chatid].test.score = 0;
                             chatList[chatid].test.CurQuest = 1;
                             chatList[chatid].test.direction = Test.Direction.NotDef;
@@ -501,8 +501,8 @@ namespace Telegram_Bot___English_trainer
                     question = chatList[chatid].test.AskedWord.Russian;
                 }
                 
-                string text = $"Тема вопроса - {chatList[chatid].test.AskedWord.Topic} " +
-                    $"\n как будет на {lan} - {question}?";
+                string text = $"Тема вопроса - _{chatList[chatid].test.AskedWord.Topic}_ " +
+                    $"\n как будет на {lan} - *{question}?*";
 
 
                 var rkm = new ReplyKeyboardMarkup(new KeyboardButton(String.Empty));
@@ -522,7 +522,7 @@ namespace Telegram_Bot___English_trainer
                 
                
                 await botClient.SendTextMessageAsync(
-                    chatid, text, replyMarkup: rkm);
+                    chatid, text, replyMarkup: rkm, parseMode: ParseMode.Markdown);
 
             }
         }

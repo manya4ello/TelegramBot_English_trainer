@@ -23,10 +23,11 @@ namespace Telegram_Bot___English_trainer.Commands
         }
         public new async Task<ChatStatus.Status> Execute(ITelegramBotClient botClient, Conversation conversation)
         {
+            
             await botClient.SendTextMessageAsync(
-           chatId: conversation.GetId(), text: "Тест прерван");
+           chatId: conversation.GetId(), text: "Тест прерван", replyMarkup: new ReplyKeyboardRemove());
 
-
+            
             return ChatStatus.Status.Root;
         }
     }
