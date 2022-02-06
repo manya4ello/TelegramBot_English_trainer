@@ -32,7 +32,7 @@ namespace Telegram_Bot___English_trainer
             var me = await botClient.GetMeAsync();
             Console.Title = me.Username ?? "My awesome Bot";
 
-            Console.WriteLine($"Start listening for @{me.Username}");
+            Console.WriteLine($"{DateTime.Now}: Start listening for @{me.Username}");
             Console.ReadLine();
         
             cts.Cancel();

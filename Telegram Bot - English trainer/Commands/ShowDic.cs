@@ -29,12 +29,14 @@ namespace Telegram_Bot___English_trainer.Commands
             
             if (conversation.dictionary.Vocabulary.Count<1)
             {
+                Console.WriteLine($"{DateTime.Now}: чат {conversation.GetId()}: запрос на показ слов. Словарь пуст");
                 await botClient.SendTextMessageAsync(conversation.GetId(), "К сожалению, Ваш словарь пуст. Добавьте слова или подгрузите из нашей базы данных.", parseMode: ParseMode.Markdown);
                 return ChatStatus.Status.Dic;
             }
                 
             if (conversation.dictionary.Vocabulary.Count > 10)
             {
+                Console.WriteLine($"{DateTime.Now}: чат {conversation.GetId()}: запрос на показ слов. Показано 10 случайных слов");
                 text = $"Всего в словаре {conversation.dictionary.Vocabulary.Count} пар слов" +
                     $"\nНо, из-за ограничений по размеру, высылаю 10 случайных пар";
                 
@@ -61,6 +63,8 @@ namespace Telegram_Bot___English_trainer.Commands
 
             if ((conversation.dictionary.Vocabulary.Count > 0)&&(conversation.dictionary.Vocabulary.Count < 11))
             {
+                Console.WriteLine($"{DateTime.Now}: чат {conversation.GetId()}: запрос на показ слов. Показано {conversation.dictionary.Vocabulary.Count} слов");
+
                 text = $"Всего в словаре {conversation.dictionary.Vocabulary.Count} пар слов";
                 await botClient.SendTextMessageAsync(conversation.GetId(), text, parseMode: ParseMode.MarkdownV2);
 
@@ -71,10 +75,9 @@ namespace Telegram_Bot___English_trainer.Commands
                 foreach (Word word in conversation.dictionary.Vocabulary)
                 {
                     text += $"\n{word.Topic}: \t{word.Russian}\t-\t{word.English}";
-                    
-                    Console.WriteLine($"\n{word.Topic}: \t{word.Russian}\t-\t{word.English}");
+                                        
                 }
-                Console.WriteLine(text);    
+                  
 
                 await botClient.SendTextMessageAsync(conversation.GetId(), text, parseMode: ParseMode.Markdown);
 

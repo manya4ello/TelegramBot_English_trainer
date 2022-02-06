@@ -28,7 +28,8 @@ namespace Telegram_Bot___English_trainer.Commands
             conversation.dictionary.ReadFile();
 
             if (start == conversation.dictionary.Vocabulary.Count)
-            { 
+            {
+                Console.WriteLine($"{DateTime.Now}: чат {conversation.GetId()}: Загрузка слов из файла. Новых слов не добавлено");
                 await botClient.SendTextMessageAsync(conversation.GetId(), $"К сожалению, мы не смогли найти новых слов. У вас в словаре по прежнему {conversation.dictionary.Vocabulary.Count} пар слов", parseMode: ParseMode.Markdown);
                 return ChatStatus.Status.Dic;
             }
@@ -40,6 +41,7 @@ namespace Telegram_Bot___English_trainer.Commands
             text += $"\nТеперь стало {conversation.dictionary.Vocabulary.Count} пар слов" +
                 $"\nПоздравляем, загрузка прошла успешно!";
 
+            Console.WriteLine($"{DateTime.Now}: чат {conversation.GetId()}: Загрузка слов из файла. Добавленно {conversation.dictionary.Vocabulary.Count - start} слов");
 
             await botClient.SendTextMessageAsync(conversation.GetId(), text, parseMode: ParseMode.Markdown);
              

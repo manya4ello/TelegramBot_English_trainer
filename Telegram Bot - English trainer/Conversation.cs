@@ -38,10 +38,8 @@ namespace Telegram_Bot___English_trainer
             Commands = new Commands.CommandControl();
                 foreach (var command in Commands.CommandsRange)
                     if (command.Father == 1)
-                    {
-                        Console.WriteLine($"в команды уровня {chatStatus} добавлена команда: {command.CommandName}");
-                        actualCommands.Add(command.Id, command);
-                    }
+                     actualCommands.Add(command.Id, command);
+                    
             chatStatus = ChatStatus.Status.Root;
             wordtoadd = new Word();
             wordtodell = string.Empty;
@@ -54,7 +52,10 @@ namespace Telegram_Bot___English_trainer
         /// </summary>
         /// <returns></returns>
         public long GetId() => telegramChat.Id;
-               
+        /// <summary>
+        /// Добавить сообщение в чат
+        /// </summary>
+        /// <param name="message">Сообщение</param>        
         public void AddMessage(Message message)
         {
             telegramMessages.Add(message);
@@ -68,15 +69,14 @@ namespace Telegram_Bot___English_trainer
         public string GetLastMessage() => telegramMessages[^1].Text;
         
         /// <summary>
-        /// Возвращает true, если сообщение является командой (и отдает команду)
+        /// Возвращает true, если сообщение является актуальной командой (и отдает команду)
         /// </summary>
         /// <param name="message">сообщение</param>
         /// <param name="command">возвращает команду</param>
         /// <returns></returns>
         public bool IfCommand (string message, out ICommand command)
         {
-            Console.WriteLine($"на входе  {message}");
-            
+                       
             ICommand show = new Commands.Show();
             if (message == show.CommandCode)
             {

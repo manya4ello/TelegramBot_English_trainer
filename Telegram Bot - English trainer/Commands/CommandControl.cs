@@ -22,7 +22,7 @@ namespace Telegram_Bot___English_trainer.Commands
             CommandsRange.Add(new AddWord());
             CommandsRange.Add(new DelWord());
             CommandsRange.Add(new Test());
-           CommandsRange.Add(new ShowDic());
+            CommandsRange.Add(new ShowDic());
             CommandsRange.Add(new About());
             CommandsRange.Add(new LoadDic());
             CommandsRange.Add(new Help());

@@ -67,7 +67,7 @@ namespace Telegram_Bot___English_trainer
                         }
                     }
 
-                    Console.WriteLine($"Читаем данные из файла \t{sourcefile}");
+                    Console.WriteLine($"{DateTime.Now}: Подгружаем данные из файла \t{sourcefile}");
 
                     bool contains = false;
                     foreach (Word wordfromfile in FromFile)

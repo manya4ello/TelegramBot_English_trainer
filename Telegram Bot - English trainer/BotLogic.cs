@@ -69,21 +69,25 @@ namespace Telegram_Bot___English_trainer
         /// <returns></returns>
         public async Task CheckIFTXTCommand(ITelegramBotClient botClient, Message message)
         {
-            var chatID = message.Chat.Id;
-           
-           //если чата нет в списке - добавляем
+            var chatID = message.Chat.Id;            
+
+            //если чата нет в списке - добавляем
             if (!chatList.ContainsKey(chatID))
             {
-                var newchat = new Conversation(message.Chat);
-                               
+                var newchat = new Conversation(message.Chat);                             
 
                 chatList.Add(chatID, newchat);
 
+                Console.WriteLine($"{DateTime.Now}: создан чат {chatID}");
+
+                //добавляем кнопки в клавиатуру для удобства
                 ICommand mainmenu = new Commands.Mainmenu();
                 mainmenu.Execute(botClient,chatList[chatID]);
                                
 
             }
+
+            Console.WriteLine($"{DateTime.Now}: чат {chatID}: текст: {message.Text}");
 
             var chat = chatList[chatID];
             var chatstatus = chat.chatStatus;
@@ -95,34 +99,28 @@ namespace Telegram_Bot___English_trainer
 
             ///если команда, выполняем
             if (chatList[chatID].IfCommand(message.Text, out curCommand))
-            {
-                Console.WriteLine($"{chatID}: Принята команда из IfCommand {curCommand.CommandName}");
                 await WorkWithCommand(botClient, chatID, curCommand);
-            }
             ///если не команда - скорее всего это ответ на какой-то вопрос
             else
             {
                 if (chatstatus == ChatStatus.Status.AddWord || chatstatus == ChatStatus.Status.AddedRus || chatstatus == ChatStatus.Status.AddedEng
                || chatstatus == ChatStatus.Status.AddedTopic)
                 {
-                    Console.WriteLine("Чего-то добавляем");
                     await AddWordLogic(botClient, chatID);
                     return;
                 }
                 if (chatstatus == ChatStatus.Status.DelWord || chatstatus == ChatStatus.Status.DelConf)
                 {
-                    Console.WriteLine("Чего-то удаляем");
                     await DelWordLogic(botClient, chatID);
                     return;
                 }
                 if (chatstatus == ChatStatus.Status.Test || chatstatus == ChatStatus.Status.TestInProcess)
                 {
-                    Console.WriteLine("Чего-то тестируем");
                     await TestLogic(botClient, chatID);
                     return; 
                 }
-                Console.WriteLine($"{chatID}: Принято неопознанное сообщение - {message.Text}");
-
+                //если сообщение не распознанно - выводим инструкции
+                Console.WriteLine($"{DateTime.Now}: чат:{chatID}: Принято неопознанное сообщение - {message.Text}");
                 var command = new Commands.Instructions();
                 await WorkWithCommand(botClient, chatID, command);
             }
@@ -141,7 +139,7 @@ namespace Telegram_Bot___English_trainer
             if (!chatList.ContainsKey(chatID))
             {
                 var newchat = new Conversation(query.Message.Chat);
-
+                Console.WriteLine($"{DateTime.Now}: создан чат {chatID}");
                 chatList.Add(chatID, newchat);
 
                 Commands.Show show = new Commands.Show();
@@ -152,12 +150,14 @@ namespace Telegram_Bot___English_trainer
             var chat = chatList[chatID];
             chat.AddMessage(query.Message);
 
+            Console.WriteLine($"{DateTime.Now}: чат {chatID}: CallBackQuerry : {query.Data}");
+
             ICommand curCommand;
 
 
             if (chatList[chatID].IfCommand(query.Data, out curCommand))
             {
-                Console.WriteLine($"Нажата кнопка {query.Data}");
+                
                 await WorkWithCommand(botClient, chatID, curCommand);
                 await botClient.AnswerCallbackQueryAsync(query.Id);
             }
@@ -191,6 +191,7 @@ namespace Telegram_Bot___English_trainer
 
             try
             {
+                //Проверяем - если это первый запуск, выводим инструкцию
                 long? newchatid = null;
                 if (update.Type == UpdateType.Message)
                     newchatid = update.Message.Chat.Id;
@@ -226,15 +227,14 @@ namespace Telegram_Bot___English_trainer
         /// <returns></returns>
         private async Task WorkWithCommand(ITelegramBotClient botClient, long chatid, ICommand command)
         {
-            Console.WriteLine($"Выполняется команда {command.CommandName}, статус чата: {chatList[chatid].chatStatus}");
+            Console.WriteLine($"{DateTime.Now}: чат {chatid}: WorkWithCommand {command.CommandName}, статус чата: {chatList[chatid].chatStatus}");
 
             var chat = chatList[chatid];
 
             chat.actualCommands = chat.Commands.GetChildren(chatList[chatid].chatStatus);
 
             chatList[chatid].chatStatus = await command.Execute(botClient, chat);
-            
-            //chat.actualCommands.Clear();
+                        
             chat.actualCommands = chat.Commands.GetChildren(chatList[chatid].chatStatus);
 
             ICommand check = new Commands.Mainmenu();
@@ -258,7 +258,7 @@ namespace Telegram_Bot___English_trainer
             var chatstatus = chatList[chatid].chatStatus;
             var wordtoad = chatList[chatid].wordtoadd;
 
-            Console.WriteLine($"AddWordLogic: последняя команда:{ mes}, статус: {chatstatus}");
+            Console.WriteLine($"{DateTime.Now}: чат:{chatid}: AddWordLogic: команда:{ mes}, статус: {chatstatus}");
 
             switch (chatstatus)
             {
@@ -301,6 +301,7 @@ namespace Telegram_Bot___English_trainer
                                 {
                                     dubl = true;
                                     await botClient.SendTextMessageAsync(chatId: chatid, text: "К сожалению, данное слово уже есть в словаре");
+                                    chatList[chatid].chatStatus = ChatStatus.Status.Dic;
                                 }
                             }
 
@@ -308,22 +309,25 @@ namespace Telegram_Bot___English_trainer
                             {
                                 chatList[chatid].dictionary.Vocabulary.Add(chatList[chatid].wordtoadd);
                                 await botClient.SendTextMessageAsync(chatId: chatid, text: "Слово успешно добавлено");
+                                chatList[chatid].chatStatus = ChatStatus.Status.Dic;
                             }
                         }
 
                         if (mes == Commands.WordConfirm.No)
                         {
                             await botClient.SendTextMessageAsync(chatId: chatid, text: "Слово не добавлено");
+                            chatList[chatid].chatStatus = ChatStatus.Status.Dic;
                         }
 
                         chatList[chatid].wordtoadd = new Word();
-                        chatList[chatid].chatStatus = ChatStatus.Status.Dic;
+                        //chatList[chatid].chatStatus = ChatStatus.Status.Dic;
 
                         ICommand mainmenu = new Commands.Mainmenu();
                         await WorkWithCommand(botClient, chatid, mainmenu);
+
                         ICommand dic = new Commands.Dic();
                         await WorkWithCommand(botClient, chatid, dic);
-
+                        Console.WriteLine($"{DateTime.Now}: чат:{chatid}: AddWordLogic завершение работы, статус: {chatList[chatid].chatStatus}");
                         
 
 
@@ -336,8 +340,7 @@ namespace Telegram_Bot___English_trainer
                         break;
                     }
             }
-
-            Console.WriteLine($"AddWordLogic: На выходе {chatstatus}");
+                        
             chatList[chatid].chatStatus = chatstatus;
         }
 
@@ -354,7 +357,7 @@ namespace Telegram_Bot___English_trainer
             
             var wordtoad = chatList[chatid].wordtoadd;
 
-            Console.WriteLine($"TestLogic: последняя команда:{ mes}, статус: {chatList[chatid].chatStatus}");
+            Console.WriteLine($"{DateTime.Now}: чат:{chatid}: TestLogic: команда:{ mes}, статус: {chatList[chatid].chatStatus}");
 
             switch (chatList[chatid].chatStatus)
             {
@@ -417,6 +420,7 @@ namespace Telegram_Bot___English_trainer
                         if (chatList[chatid].test.CurQuest == chatList[chatid].test.MaxNofQuestions)
                         {
                             string text = $"Ваш результат - {chatList[chatid].test.score} правильных ответов из {chatList[chatid].test.MaxNofQuestions}";
+                            Console.WriteLine($"{DateTime.Now}: чат:{chatid}: TestLogic: окончание теста. Правильных ответов из {chatList[chatid].test.MaxNofQuestions}");
                             await botClient.SendTextMessageAsync(chatId: chatid, text: text);
                             chatList[chatid].test.score = 0;
                             chatList[chatid].test.CurQuest = 1;
@@ -434,7 +438,7 @@ namespace Telegram_Bot___English_trainer
                         {
                             bool qdir = false;
                             var randq = random.Next(100);
-                            Console.WriteLine($"случайное число:{randq}");
+                            
                             if (randq < 51)
                                 qdir = true;
                             chatList[chatid].test.CurQuestRusEng = qdir;
@@ -449,13 +453,13 @@ namespace Telegram_Bot___English_trainer
                     }
                 default:
                     {
+                        //не должно происходить, но если вдруг - меняет статус
                         await botClient.SendTextMessageAsync(chatId: chatid, text: "А хз, что произошло");
                         chatList[chatid].chatStatus = ChatStatus.Status.Root;
                         break;
                     }
             }
-
-            Console.WriteLine($"TestLogic: На выходе {chatList[chatid].chatStatus}");
+                      
 
             //Выбирает следующий ответ и добавляет к списку неправильных ответов 
             List<string> SetQuestion ()
@@ -534,7 +538,7 @@ namespace Telegram_Bot___English_trainer
 
             var wordtoad = chatList[chatid].wordtoadd;
 
-            Console.WriteLine($"DelWordLogic: последняя команда:{ mes}, статус: {chatList[chatid].chatStatus}");
+            Console.WriteLine($"{DateTime.Now}: чат:{chatid}: DelWordLogic: команда:{ mes}, статус: {chatList[chatid].chatStatus}");
 
             switch (chatList[chatid].chatStatus)
             {
@@ -588,6 +592,7 @@ namespace Telegram_Bot___English_trainer
                             if (check)
                             {
                                 chatList[chatid].dictionary.Vocabulary.Remove(del);
+                                Console.WriteLine($"{DateTime.Now}: чат:{chatid}: DelWordLogic: Успешно удалено слово:{del.Russian}-{del.English}, статус: {chatList[chatid].chatStatus}");
                                 await botClient.SendTextMessageAsync(chatId: chatid, text: "Слово успешно удалено");
                             }
 
@@ -613,13 +618,13 @@ namespace Telegram_Bot___English_trainer
                     }
                 default:
                     {
+                        //не должно произойти
                         await botClient.SendTextMessageAsync(chatId: chatid, text: "А хз, что произошло");
                         chatList[chatid].chatStatus = ChatStatus.Status.Root;
                         break;
                     }
             }
-
-            Console.WriteLine($"DellWordLogic: На выходе {chatList[chatid].chatStatus}");
+                       
 
         }
     }
