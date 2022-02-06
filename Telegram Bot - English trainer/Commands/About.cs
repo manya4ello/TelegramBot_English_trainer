@@ -27,8 +27,8 @@ namespace Telegram_Bot___English_trainer.Commands
             string text = "*О данном проекте:*" +
                 "\nРобот-тренер по английскому языку разработан в рамках курса \"Разработчик С#\"" +
                 "\nНадеемся он будет вам полезен!" +
-                "\nС уважением," +
-                "\nManya4ello";
+                "\n_С уважением," +
+                "\nManya4ello_";
                         
             await botClient.SendTextMessageAsync(
             chatId: conversation.GetId(), text: text, parseMode: ParseMode.Markdown);

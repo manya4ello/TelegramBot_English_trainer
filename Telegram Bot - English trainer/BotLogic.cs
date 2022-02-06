@@ -80,10 +80,9 @@ namespace Telegram_Bot___English_trainer
 
                 Console.WriteLine($"{DateTime.Now}: создан чат {chatID}");
 
-                //добавляем кнопки в клавиатуру для удобства
+                //добавляем кнопки в клавиатуру для удобства, путем подмены исходного сообщения на команду вывода меню
                 ICommand mainmenu = new Commands.Mainmenu();
-                mainmenu.Execute(botClient,chatList[chatID]);
-                               
+                message.Text = mainmenu.CommandCode;
 
             }
 
@@ -175,17 +174,10 @@ namespace Telegram_Bot___English_trainer
         {
             var handler = update.Type switch
             {
-                // UpdateType.Unknown:
-                // UpdateType.ChannelPost:
-                // UpdateType.EditedChannelPost:
-                // UpdateType.ShippingQuery:
-                // UpdateType.PreCheckoutQuery:
-                // UpdateType.Poll:
+                
                 UpdateType.Message => CheckIFTXTCommand(botClient, update.Message),
                 UpdateType.EditedMessage => CheckIFTXTCommand(botClient, update.EditedMessage),
                 UpdateType.CallbackQuery => CheckCallBackQuerry(botClient, update.CallbackQuery),
-                //UpdateType.InlineQuery => BotOnInlineQueryReceived(botClient, update.InlineQuery!),
-                //UpdateType.ChosenInlineResult => BotOnChosenInlineResultReceived(botClient, update.ChosenInlineResult!),
                 _ => UnknownUpdateHandlerAsync(botClient, update)
             };
 
