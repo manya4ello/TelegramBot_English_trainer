@@ -14,7 +14,7 @@ namespace Telegram_Bot___English_trainer.Commands
         /// </summary>
         public ShowDic()
             {
-            CommandName = "База слов";
+            CommandName = "словарь";
             CommandCode = "/showdic";
             Id = 100;
             Father = 10;

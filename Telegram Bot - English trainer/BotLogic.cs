@@ -508,12 +508,13 @@ namespace Telegram_Bot___English_trainer
                 var rkm = new ReplyKeyboardMarkup(new KeyboardButton(String.Empty));
                 var rows = new List<KeyboardButton[]>();
                 var cols = new List<KeyboardButton>();
-                
+                var i = 0;
                 for (var Index = 0; Index < answers.Count; Index++)
                 {
-                    
+                    i++;
                     cols.Add(new KeyboardButton(answers[Index]));
-                    if (Index % 2 != 0) continue;
+                    if (i % 2 != 0) continue;
+                    
                     rows.Add(cols.ToArray());
                     cols = new List<KeyboardButton>();
                     

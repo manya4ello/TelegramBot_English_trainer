@@ -14,7 +14,7 @@ namespace Telegram_Bot___English_trainer.Commands
         
         public AddWord()
         {
-            CommandName = "Добавить слово";
+            CommandName = "+ слово";
             CommandCode = "/add";
             Id = 11;
             Father = 10;

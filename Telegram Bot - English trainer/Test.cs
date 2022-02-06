@@ -50,8 +50,8 @@ namespace Telegram_Bot___English_trainer
         public Test()
             {
                 MaxNofQuestions = 5;
-            direction = Direction.NotDef;
-            NumberOfWrongQuest = 4;
+                direction = Direction.NotDef;
+                NumberOfWrongQuest = 5;
               }
         /// <summary>
         /// Проверка правильности ответа

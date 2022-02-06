@@ -30,6 +30,7 @@ namespace Telegram_Bot___English_trainer.Commands
                 string text = "Доступные команды:";
                 var buttonList = new List<InlineKeyboardButton>();
 
+               
                 ICommand command;
                 foreach (var commandline in actualCommands)
                 {

@@ -13,7 +13,7 @@ namespace Telegram_Bot___English_trainer.Commands
         /// </summary>
         public Mainmenu()
         {
-            CommandName = "Главное меню";
+            CommandName = "Команды";
             CommandCode = "/mm";
             Id = 999;
             Father = 1;

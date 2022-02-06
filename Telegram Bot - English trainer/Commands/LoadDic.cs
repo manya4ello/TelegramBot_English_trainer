@@ -14,7 +14,7 @@ namespace Telegram_Bot___English_trainer.Commands
         /// </summary>
         public LoadDic()
             {
-            CommandName = "Подгрузить слова из базы";
+            CommandName = "+ база";
             CommandCode = "/loaddic";
             Id = 13;
             Father = 10;

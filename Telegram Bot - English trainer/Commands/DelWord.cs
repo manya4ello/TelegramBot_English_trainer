@@ -15,7 +15,7 @@ namespace Telegram_Bot___English_trainer.Commands
         /// </summary>
         public DelWord()
         {
-            CommandName = "Удалить слово";
+            CommandName = "- слово";
             CommandCode = "/del";
             Id = 12;
             Father = 10;
