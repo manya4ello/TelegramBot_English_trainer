@@ -19,6 +19,7 @@ namespace Telegram_Bot___English_trainer
         {
             Vocabulary = new List<Word>();
             rnd = new Random();
+            AddTemplate();
             try
             {
                 ReadFile(5);
@@ -113,6 +114,25 @@ namespace Telegram_Bot___English_trainer
             
         }
 
+        /// <summary>
+        /// На случай, если с файлом проблемы - заливает 5 слов
+        /// </summary>
+        public void AddTemplate()
+        {
+            List<Word> words = new List<Word>()
+            {
+                new Word("кошка", "cat", "животные"),
+                new Word("собака", "dog", "животные"),
+                new Word("енот", "racoon", "животные"),
+                new Word("жена", "wife", "семья"),
+                new Word("ребенок", "child", "семья")
+            };
+
+            
+            foreach (Word word in words)
+                            Vocabulary.Add(word);
+             
+        }
        public List<string> GetRandQuestion(bool ruseng, Word target, int numanswers)
         {
             Random random = new Random();

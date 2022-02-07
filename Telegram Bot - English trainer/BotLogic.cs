@@ -312,7 +312,7 @@ namespace Telegram_Bot___English_trainer
                         }
 
                         chatList[chatid].wordtoadd = new Word();
-                        //chatList[chatid].chatStatus = ChatStatus.Status.Dic;
+                        chatList[chatid].chatStatus = ChatStatus.Status.Dic;
 
                         ICommand mainmenu = new Commands.Mainmenu();
                         await WorkWithCommand(botClient, chatid, mainmenu);
