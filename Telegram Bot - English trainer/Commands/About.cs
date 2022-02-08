@@ -33,7 +33,6 @@ namespace Telegram_Bot___English_trainer.Commands
             await botClient.SendTextMessageAsync(
             chatId: conversation.GetId(), text: text, parseMode: ParseMode.Markdown);
 
-
             return conversation.chatStatus; ;
         }
     }
